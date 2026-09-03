@@ -1,0 +1,1393 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#143d59">
+  <meta name="description" content="Hikâyeler, dinleme etkinlikleri ve quizlerle Almanca öğren.">
+  <title>LeseWelt – Hikâyelerle Almanca</title>
+  <style>
+    :root {
+      --ink:#172536;
+      --muted:#607083;
+      --paper:#fffdf8;
+      --canvas:#f3f6f4;
+      --brand:#143d59;
+      --brand-2:#0f6b68;
+      --accent:#ffcb69;
+      --accent-2:#f08a5d;
+      --line:#dce4e4;
+      --success:#168568;
+      --danger:#c94444;
+      --shadow:0 18px 50px rgba(20,61,89,.12);
+      --radius:24px;
+      --font:Inter,ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55}
+    button,input,select{font:inherit}
+    button{color:inherit}
+    button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid rgba(240,138,93,.42);outline-offset:3px}
+    .hidden{display:none!important}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .app-header{position:sticky;top:0;z-index:40;background:rgba(243,246,244,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(20,61,89,.08)}
+    .header-inner{max-width:1180px;margin:auto;padding:12px 22px;display:flex;align-items:center;gap:18px}
+    .brand{border:0;background:transparent;padding:4px;display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:900;font-size:1.25rem;color:var(--brand)}
+    .brand-mark{width:38px;height:38px;border-radius:13px;background:var(--brand);display:grid;place-items:center;color:white;box-shadow:inset 0 -4px 0 rgba(0,0,0,.12)}
+    .main-nav{display:flex;gap:5px;margin-left:auto}
+    .nav-btn,.icon-btn{border:0;background:transparent;padding:9px 13px;border-radius:13px;font-weight:750;cursor:pointer;color:var(--muted)}
+    .nav-btn:hover,.nav-btn.active,.icon-btn:hover{background:white;color:var(--brand)}
+    .header-stats{display:flex;gap:8px}
+    .xp-pill,.streak-pill{display:flex;align-items:center;gap:6px;padding:8px 11px;background:white;border:1px solid var(--line);border-radius:999px;font-weight:850;font-size:.9rem}
+    .mobile-nav{display:none;position:fixed;z-index:45;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:7px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));grid-template-columns:repeat(3,1fr)}
+    .mobile-nav button{border:0;background:transparent;padding:7px 3px;border-radius:12px;color:var(--muted);font-size:.75rem;font-weight:800}
+    .mobile-nav button span{display:block;font-size:1.25rem;line-height:1.15}
+    .mobile-nav button.active{color:var(--brand);background:#eef5f4}
+    main{max-width:1180px;margin:auto;padding:30px 22px 70px}
+    .screen{animation:fadeUp .32s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:clamp(2rem,5vw,4.35rem);line-height:1.02;letter-spacing:-.055em}
+    h2{font-size:clamp(1.55rem,3vw,2.25rem);line-height:1.12;letter-spacing:-.035em}
+    h3{font-size:1.12rem;line-height:1.3}
+    .eyebrow{display:inline-flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:900;color:var(--brand-2);margin-bottom:12px}
+    .muted{color:var(--muted)}
+    .btn{border:0;border-radius:14px;padding:12px 17px;font-weight:850;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.18s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:var(--brand);color:white;box-shadow:0 9px 22px rgba(20,61,89,.2)}
+    .btn-secondary{background:white;border:1px solid var(--line)}
+    .btn-soft{background:#e9f4f2;color:var(--brand-2)}
+    .btn-danger{background:#fff0f0;color:var(--danger)}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .card{background:var(--paper);border:1px solid rgba(20,61,89,.1);border-radius:var(--radius);box-shadow:0 7px 24px rgba(20,61,89,.06)}
+
+    /* onboarding */
+    #onboarding{min-height:calc(100vh - 130px);display:grid;align-items:center}
+    .onboarding-shell{display:grid;grid-template-columns:.86fr 1.14fr;overflow:hidden;min-height:610px}
+    .onboarding-art{background:var(--brand);color:white;padding:52px;display:flex;flex-direction:column;justify-content:space-between;position:relative;isolation:isolate}
+    .onboarding-art:before,.onboarding-art:after{content:"";position:absolute;border-radius:50%;z-index:-1}
+    .onboarding-art:before{width:320px;height:320px;background:var(--accent);right:-145px;top:-95px;opacity:.92}
+    .onboarding-art:after{width:240px;height:240px;border:42px solid var(--accent-2);left:-115px;bottom:-115px;opacity:.72}
+    .art-logo{display:flex;align-items:center;gap:11px;font-weight:900;font-size:1.25rem}
+    .art-logo .brand-mark{background:white;color:var(--brand)}
+    .onboarding-art h1{max-width:560px;margin-bottom:20px}
+    .onboarding-art p{font-size:1.08rem;color:#dce9ed;max-width:430px}
+    .mini-proof{display:flex;flex-wrap:wrap;gap:10px}
+    .mini-proof span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);padding:8px 11px;border-radius:999px;font-size:.84rem;font-weight:750}
+    .onboarding-panel{padding:48px;display:flex;flex-direction:column;justify-content:center;background:var(--paper)}
+    .step-label{color:var(--brand-2);font-size:.82rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0}
+    .choice-card{border:2px solid var(--line);background:white;text-align:left;border-radius:20px;padding:20px;cursor:pointer;transition:.18s ease;position:relative}
+    .choice-card:hover{border-color:#9fc7c3;transform:translateY(-2px);box-shadow:0 10px 24px rgba(20,61,89,.08)}
+    .choice-card.selected{border-color:var(--brand-2);background:#eef8f6}
+    .choice-card .choice-icon{font-size:2rem;display:block;margin-bottom:9px}
+    .choice-card strong{display:block;font-size:1.08rem;margin-bottom:4px}
+    .choice-card small{display:block;color:var(--muted);line-height:1.4}
+    .level-list{display:grid;gap:10px;margin:20px 0}
+    .level-card{display:flex;gap:14px;align-items:center;border:2px solid var(--line);background:white;border-radius:17px;padding:14px;cursor:pointer;text-align:left}
+    .level-card:hover,.level-card.selected{border-color:var(--brand-2);background:#eef8f6}
+    .level-code{width:52px;height:52px;border-radius:15px;background:var(--brand);color:white;display:grid;place-items:center;font-weight:950;flex:0 0 auto}
+    .level-card strong{display:block}
+    .level-card small{color:var(--muted)}
+    .coming{margin-left:auto;font-size:.72rem;background:#edf0f2;color:var(--muted);padding:5px 8px;border-radius:999px;font-weight:850}
+    .onboarding-actions{display:flex;justify-content:space-between;gap:12px;margin-top:10px}
+
+    /* dashboard */
+    .welcome-row{display:grid;grid-template-columns:1.35fr .65fr;gap:20px;margin-bottom:26px}
+    .welcome-card{padding:30px;background:linear-gradient(135deg,var(--brand),#1b5a71);color:white;position:relative;overflow:hidden}
+    .welcome-card:after{content:"DE";position:absolute;right:-4px;bottom:-52px;font-size:9rem;font-weight:950;color:rgba(255,255,255,.07);line-height:1}
+    .welcome-card p{color:#dce9ed;margin-bottom:22px;max-width:620px}
+    .daily-card{padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+    .daily-top{display:flex;justify-content:space-between;gap:15px}
+    .daily-ring{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent-2) var(--daily-progress,0%),#e7ecec 0);position:relative;font-weight:950}
+    .daily-ring:before{content:"";position:absolute;inset:8px;background:var(--paper);border-radius:50%}
+    .daily-ring span{position:relative}
+    .progress-track{height:10px;background:#e5ebeb;border-radius:99px;overflow:hidden}
+    .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent-2),var(--accent));border-radius:inherit;transition:width .5s ease}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:34px 0 15px}
+    .section-head h2{margin-bottom:4px}
+    .filters{display:flex;flex-wrap:wrap;gap:8px}
+    .filter-btn{border:1px solid var(--line);background:white;border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer}
+    .filter-btn.active{background:var(--brand);border-color:var(--brand);color:white}
+    .path{display:flex;align-items:center;gap:8px;overflow:auto;padding:3px 2px 15px;scrollbar-width:thin}
+    .path-step{min-width:175px;border:1px solid var(--line);background:white;border-radius:17px;padding:14px;display:flex;align-items:center;gap:11px}
+    .path-step.done{background:#e9f6f1;border-color:#b9ddce}
+    .path-number{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#e7edef;color:var(--brand);font-weight:950}
+    .path-step.done .path-number{background:var(--success);color:white}
+    .path-arrow{color:#9ba8af;font-weight:900}
+    .book-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .book-card{overflow:hidden;display:flex;flex-direction:column;transition:.2s ease}
+    .book-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+    .book-cover{min-height:177px;padding:23px;display:flex;flex-direction:column;justify-content:space-between;color:white;position:relative;overflow:hidden}
+    .book-cover:after{content:"";position:absolute;width:115px;height:115px;border:24px solid rgba(255,255,255,.13);border-radius:50%;right:-35px;bottom:-45px}
+    .cover-icon{font-size:2.25rem}
+    .cover-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900;opacity:.88}
+    .book-cover h3{font-size:1.45rem;max-width:85%;margin:5px 0 0}
+    .book-body{padding:19px;display:flex;flex-direction:column;flex:1}
+    .meta-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+    .tag{font-size:.75rem;font-weight:850;border-radius:999px;padding:5px 8px;background:#edf3f3;color:#536875}
+    .book-body p{color:var(--muted);font-size:.92rem;min-height:44px}
+    .book-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:12px;border-top:1px solid var(--line)}
+    .book-status{font-size:.83rem;color:var(--muted);font-weight:750}
+    .empty-state{padding:55px 25px;text-align:center}
+    .empty-state .big-icon{font-size:3rem}
+
+    /* reader */
+    .reader-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}
+    .reader-layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:22px;align-items:start}
+    .reader-paper{padding:clamp(22px,5vw,54px);background:#fffefa}
+    .reader-kicker{font-size:.8rem;color:var(--brand-2);font-weight:900;text-transform:uppercase;letter-spacing:.12em}
+    .reader-title{font-size:clamp(2.2rem,5vw,4rem);margin:9px 0 10px}
+    .reader-intro{font-size:1.08rem;color:var(--muted);max-width:700px}
+    .reader-tools{display:flex;flex-wrap:wrap;gap:9px;padding:15px 0 24px;margin-bottom:25px;border-bottom:1px solid var(--line)}
+    .tool-group{display:flex;background:#edf2f2;border-radius:13px;padding:4px;gap:3px}
+    .tool-btn{border:0;background:transparent;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:.86rem;font-weight:800}
+    .tool-btn.active{background:white;color:var(--brand);box-shadow:0 2px 9px rgba(20,61,89,.1)}
+    .story-text{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.1rem,2.1vw,1.29rem);line-height:2;color:#202c35}
+    .story-paragraph{padding:12px 14px;border-radius:14px;margin:0 -14px 18px;transition:.2s ease;position:relative}
+    .story-paragraph.speaking{background:#fff3d3}
+    .paragraph-audio{float:right;margin:3px 0 4px 12px;border:0;background:#edf4f4;border-radius:50%;width:34px;height:34px;cursor:pointer}
+    .word{border:0;background:transparent;padding:0 1px;border-bottom:1.5px dotted #96aaa9;cursor:pointer;font:inherit;color:inherit}
+    .word:hover{background:#fff0c4;border-radius:4px}
+    .word.saved{background:#ffe7a7;border-bottom-style:solid}
+    .exam-mode .word{border-bottom-color:transparent;cursor:default}
+    .translation{font-family:var(--font);font-size:.94rem;line-height:1.55;color:#657482;border-left:3px solid var(--accent);padding-left:13px;margin-top:9px}
+    .sentence-translation{font-family:var(--font);font-size:.9rem;color:var(--muted);background:#f2f5f5;border-radius:11px;padding:9px 11px;margin-top:7px}
+    .reader-side{display:grid;gap:14px;position:sticky;top:85px}
+    .side-card{padding:20px}
+    .side-card h3{margin-bottom:12px}
+    .goal-list{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+    .goal-list li{display:flex;gap:9px;font-size:.91rem}
+    .goal-list li:before{content:"✓";color:var(--success);font-weight:950}
+    .prep-words{display:flex;flex-wrap:wrap;gap:7px}
+    .prep-word{border:1px solid var(--line);background:white;border-radius:10px;padding:7px 9px;font-size:.82rem;cursor:pointer}
+    .culture{background:#fff4d7;border-color:#f3d891}
+    .reader-finish{margin-top:32px;padding:24px;background:#eaf6f3;border-radius:20px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+
+    /* quiz */
+    .quiz-shell{max-width:780px;margin:20px auto}
+    .quiz-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .quiz-card{padding:clamp(24px,5vw,44px)}
+    .quiz-counter{font-weight:900;color:var(--brand-2);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em}
+    .question{font-size:clamp(1.25rem,3vw,1.75rem);margin:15px 0 23px}
+    .answer-list{display:grid;gap:11px}
+    .answer{border:2px solid var(--line);background:white;padding:14px 16px;border-radius:15px;text-align:left;cursor:pointer;font-weight:750}
+    .answer:hover:not(:disabled){border-color:#98bcb9}
+    .answer.selected{border-color:var(--brand-2);background:#eef8f6}
+    .answer.correct{border-color:var(--success);background:#e9f7f1}
+    .answer.wrong{border-color:var(--danger);background:#fff0f0}
+    .answer:disabled{cursor:default}
+    .feedback{margin-top:18px;border-radius:15px;padding:14px 16px}
+    .feedback.good{background:#e8f6ef;color:#126a55}
+    .feedback.bad{background:#fff0f0;color:#9d3535}
+    .quiz-actions{display:flex;justify-content:flex-end;margin-top:22px}
+    .result-card{text-align:center}
+    .result-score{width:145px;height:145px;border-radius:50%;display:grid;place-items:center;margin:15px auto 24px;background:var(--brand);color:white;border:10px solid #d9ebe7}
+    .result-score strong{font-size:2.3rem;display:block;line-height:1}
+
+    /* words and progress */
+    .page-title{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:22px}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:25px}
+    .stat-card{padding:19px}
+    .stat-card span{display:block;color:var(--muted);font-size:.84rem;font-weight:750}
+    .stat-card strong{display:block;font-size:1.85rem;line-height:1.2;margin-top:6px}
+    .word-layout{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
+    .word-list{display:grid;gap:10px}
+    .word-row{padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+    .word-main{display:flex;align-items:center;gap:13px}
+    .article-badge{min-width:48px;padding:5px 8px;border-radius:9px;text-align:center;background:#e8f0f2;color:var(--brand);font-size:.78rem;font-weight:900}
+    .word-main strong{font-size:1.06rem}
+    .word-main small{display:block;color:var(--muted)}
+    .status-select{border:1px solid var(--line);background:white;border-radius:10px;padding:8px}
+    .review-card{padding:23px;position:sticky;top:85px}
+    .flashcard{min-height:215px;border-radius:19px;background:var(--brand);color:white;padding:25px;display:flex;flex-direction:column;justify-content:center;text-align:center;cursor:pointer;margin:16px 0}
+    .flashcard .front{font-size:1.65rem;font-weight:900}
+    .flashcard .back{margin-top:9px;color:#dce9ed}
+    .review-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+    .review-actions button{border:0;border-radius:11px;padding:9px 5px;font-size:.78rem;font-weight:850;cursor:pointer}
+    .badges-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .badge-card{padding:19px;display:flex;align-items:center;gap:14px;opacity:.52;filter:grayscale(.7)}
+    .badge-card.unlocked{opacity:1;filter:none}
+    .badge-icon{width:54px;height:54px;display:grid;place-items:center;background:#fff0c7;border-radius:17px;font-size:1.65rem}
+    .error-list{display:grid;gap:10px}
+    .error-row{padding:16px}
+    .error-row p{margin:5px 0;color:var(--muted)}
+    .settings-card{padding:22px;margin-top:22px}
+
+    /* dialogs */
+    dialog{border:0;border-radius:24px;padding:0;max-width:min(510px,calc(100vw - 28px));width:100%;box-shadow:0 30px 90px rgba(7,30,45,.28);color:var(--ink)}
+    dialog::backdrop{background:rgba(15,34,47,.55);backdrop-filter:blur(4px)}
+    .dialog-body{padding:27px}
+    .dialog-head{display:flex;justify-content:space-between;gap:15px;align-items:start}
+    .dialog-close{border:0;background:#edf2f2;border-radius:50%;width:36px;height:36px;cursor:pointer}
+    .word-detail-title{font-size:1.8rem;margin:8px 0 2px}
+    .word-meaning{font-size:1.12rem;color:var(--brand-2);font-weight:800}
+    .word-data{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:18px 0}
+    .word-data div{background:#f1f4f4;border-radius:12px;padding:11px}
+    .word-data small{display:block;color:var(--muted)}
+    .example-box{background:#fff5d9;border-left:4px solid var(--accent);padding:13px;border-radius:11px;margin-bottom:18px}
+    .dialog-actions{display:flex;gap:9px;justify-content:flex-end}
+    .toast{position:fixed;z-index:80;right:22px;bottom:22px;background:var(--ink);color:white;padding:13px 17px;border-radius:13px;box-shadow:var(--shadow);transform:translateY(25px);opacity:0;pointer-events:none;transition:.23s ease;max-width:330px}
+    .toast.show{transform:none;opacity:1}
+
+    @media(max-width:900px){
+      .onboarding-shell{grid-template-columns:1fr}
+      .onboarding-art{min-height:300px;padding:35px}
+      .onboarding-art h1{font-size:2.8rem}
+      .onboarding-panel{padding:35px}
+      .welcome-row,.reader-layout,.word-layout{grid-template-columns:1fr}
+      .reader-side,.review-card{position:static}
+      .book-grid{grid-template-columns:repeat(2,1fr)}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .badges-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:680px){
+      body{padding-bottom:67px}
+      .header-inner{padding:9px 14px}
+      .brand-name,.main-nav,.streak-pill{display:none}
+      .header-stats{margin-left:auto}
+      .mobile-nav{display:grid}
+      main{padding:20px 14px 40px}
+      #onboarding{min-height:auto}
+      .onboarding-shell{border-radius:20px}
+      .onboarding-art{min-height:270px;padding:27px}
+      .onboarding-art h1{font-size:2.2rem}
+      .onboarding-panel{padding:26px 20px}
+      .choice-grid,.book-grid,.badges-grid{grid-template-columns:1fr}
+      .welcome-row{grid-template-columns:1fr}
+      .welcome-card,.daily-card{padding:22px}
+      .section-head,.page-title{align-items:start;flex-direction:column}
+      .book-cover{min-height:155px}
+      .reader-top{align-items:start}
+      .reader-paper{border-radius:18px}
+      .reader-tools{position:sticky;top:57px;background:#fffefa;z-index:10}
+      .reader-finish{align-items:flex-start;flex-direction:column}
+      .stats-grid{gap:9px}
+      .stat-card{padding:14px}
+      .word-row{grid-template-columns:1fr}
+      .status-select{width:100%}
+      .toast{right:14px;left:14px;bottom:82px;max-width:none}
+    }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <header class="app-header hidden" id="appHeader">
+    <div class="header-inner">
+      <button class="brand" data-go="library" aria-label="Ana sayfa">
+        <span class="brand-mark">L</span><span class="brand-name">LeseWelt</span>
+      </button>
+      <nav class="main-nav" aria-label="Ana menü">
+        <button class="nav-btn active" data-go="library">Kitaplık</button>
+        <button class="nav-btn" data-go="words">Kelimelerim</button>
+        <button class="nav-btn" data-go="progress">İlerlemem</button>
+      </nav>
+      <div class="header-stats">
+        <div class="streak-pill" title="Günlük seri">🔥 <span id="headerStreak">1</span></div>
+        <div class="xp-pill" title="Toplam puan">⭐ <span id="headerXp">0</span> XP</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="onboarding" class="screen">
+      <div class="onboarding-shell card">
+        <div class="onboarding-art">
+          <div class="art-logo"><span class="brand-mark">L</span> LeseWelt</div>
+          <div>
+            <div class="eyebrow" style="color:#ffdb8e">Deutsch lesen · hören · lernen</div>
+            <h1>Hikâyelerin içinde Almanca öğren.</h1>
+            <p>Oku, dinle, bilmediğin kelimeleri biriktir ve her kitabın sonunda kendini dene.</p>
+          </div>
+          <div class="mini-proof"><span>Sesli kitaplar</span><span>Kişisel sözlük</span><span>Quiz ve XP</span></div>
+        </div>
+        <div class="onboarding-panel">
+          <div id="audienceStep">
+            <div class="step-label">1 / 2 · Profilini seç</div>
+            <h2>Bu öğrenme yolunu kim kullanacak?</h2>
+            <p class="muted">Kitapları ve görünümü sana göre hazırlayalım.</p>
+            <div class="choice-grid">
+              <button class="choice-card" data-audience="adult">
+                <span class="choice-icon">🧑</span>
+                <strong>Yetişkin</strong>
+                <small>Günlük yaşam, Almanya, iş, ulaşım ve gerçek diyaloglar</small>
+              </button>
+              <button class="choice-card" data-audience="child">
+                <span class="choice-icon">🧒</span>
+                <strong>Çocuk</strong>
+                <small>Renkli, kısa, eğitici ve macera dolu hikâyeler</small>
+              </button>
+            </div>
+            <div class="onboarding-actions"><span></span><button class="btn btn-primary" id="toLevel" disabled>Devam et →</button></div>
+          </div>
+          <div id="levelStep" class="hidden">
+            <div class="step-label">2 / 2 · Seviyeni seç</div>
+            <h2>Almancan hangi seviyede?</h2>
+            <p class="muted">Emin değilsen başlangıç seçeneğiyle başlayabilirsin.</p>
+            <div class="level-list">
+              <button class="level-card" data-level="Starter">
+                <span class="level-code">0</span><span><strong>Başlangıç</strong><small>Hiç bilmiyorum veya birkaç kelime biliyorum.</small></span>
+              </button>
+              <button class="level-card" data-level="A1">
+                <span class="level-code">A1</span><span><strong>Temel seviye</strong><small>Çok az biliyorum; kısa ve basit cümleleri anlayabiliyorum.</small></span>
+              </button>
+              <button class="level-card" disabled>
+                <span class="level-code">A2</span><span><strong>Temel iletişim</strong><small>Günlük konularda basitçe kendimi ifade edebiliyorum.</small></span><span class="coming">Yakında</span>
+              </button>
+              <button class="level-card" disabled>
+                <span class="level-code">B1</span><span><strong>Orta seviye</strong><small>Tanıdık konularda konuşabiliyor ve metinleri anlayabiliyorum.</small></span><span class="coming">Yakında</span>
+              </button>
+              <button class="level-card" disabled>
+                <span class="level-code">B2</span><span><strong>Bağımsız kullanım</strong><small>Çoğu konuda ayrıntılı iletişim kurabiliyorum.</small></span><span class="coming">Yakında</span>
+              </button>
+            </div>
+            <div class="onboarding-actions">
+              <button class="btn btn-secondary" id="backAudience">← Geri</button>
+              <button class="btn btn-primary" id="startLearning" disabled>Öğrenmeye başla</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="library" class="screen hidden">
+      <div class="welcome-row">
+        <article class="welcome-card card">
+          <div class="eyebrow" style="color:#ffd98b">A1 Almanca öğrenme yolu</div>
+          <h2 id="welcomeTitle">Bugün bir hikâyeyle başlayalım.</h2>
+          <p id="welcomeText">Her kitap sana yeni kelimeler, günlük ifadeler ve küçük bir dilbilgisi konusu öğretecek.</p>
+          <button class="btn btn-primary" style="background:var(--accent);color:var(--brand)" id="continueBtn">Önerilen kitabı aç →</button>
+        </article>
+        <article class="daily-card card">
+          <div class="daily-top">
+            <div><div class="eyebrow">Günlük hedef</div><h3 id="dailyMessage">Bugün 60 XP kazan</h3></div>
+            <div class="daily-ring" id="dailyRing"><span id="dailyPercent">0%</span></div>
+          </div>
+          <div>
+            <div class="progress-track"><div class="progress-fill" id="dailyFill"></div></div>
+            <small class="muted" id="dailyXpText">0 / 60 XP</small>
+          </div>
+        </article>
+      </div>
+
+      <div class="section-head">
+        <div><div class="eyebrow">Adım adım</div><h2>Öğrenme yolun</h2></div>
+      </div>
+      <div class="path" id="learningPath"></div>
+
+      <div class="section-head">
+        <div><div class="eyebrow">A1 kitaplığı</div><h2 id="libraryHeading">Yetişkin hikâyeleri</h2><p class="muted">Bir kitabı seç, oku veya dinle; sonra quizini tamamla.</p></div>
+        <div class="filters" id="topicFilters"></div>
+      </div>
+      <div class="book-grid" id="bookGrid"></div>
+    </section>
+
+    <section id="reader" class="screen hidden">
+      <div class="reader-top">
+        <button class="btn btn-secondary" data-go="library">← Kitaplığa dön</button>
+        <span class="xp-pill" id="readerXp">+50 XP · Kitabı bitir</span>
+      </div>
+      <div class="reader-layout">
+        <article class="reader-paper card">
+          <div class="reader-kicker" id="readerKicker"></div>
+          <h1 class="reader-title" id="readerTitle"></h1>
+          <p class="reader-intro" id="readerIntro"></p>
+          <div class="reader-tools" aria-label="Okuma araçları">
+            <div class="tool-group" aria-label="Okuma modu">
+              <button class="tool-btn" data-mode="comfort">Rahat</button>
+              <button class="tool-btn active" data-mode="learn">Öğren</button>
+              <button class="tool-btn" data-mode="exam">Sınav</button>
+            </div>
+            <button class="btn btn-soft" id="listenAll">🔊 Tümünü dinle</button>
+            <div class="tool-group" aria-label="Dinleme hızı">
+              <button class="tool-btn" data-rate=".72">Yavaş</button>
+              <button class="tool-btn active" data-rate="1">Normal</button>
+            </div>
+            <button class="btn btn-secondary" id="toggleTranslation">Çeviriyi göster</button>
+          </div>
+          <div class="story-text" id="storyText"></div>
+          <div class="reader-finish">
+            <div><strong>Kitabı tamamladın mı?</strong><div class="muted">Önce tamamla, sonra 10 soruluk quizle kendini dene.</div></div>
+            <button class="btn btn-primary" id="finishStory">Tamamladım · Quize geç →</button>
+          </div>
+        </article>
+        <aside class="reader-side">
+          <div class="side-card card">
+            <div class="eyebrow">Bu kitapta</div>
+            <h3>Öğreneceklerin</h3>
+            <ul class="goal-list" id="readerGoals"></ul>
+          </div>
+          <div class="side-card card">
+            <div class="eyebrow">Hikâyeye hazırlan</div>
+            <h3>Önemli kelimeler</h3>
+            <div class="prep-words" id="prepWords"></div>
+          </div>
+          <div class="side-card card culture">
+            <div class="eyebrow">Almanya notu</div>
+            <p id="cultureNote" style="margin:0"></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="quiz" class="screen hidden">
+      <div class="quiz-shell">
+        <div class="quiz-head">
+          <button class="btn btn-secondary" id="leaveQuiz">← Kitaba dön</button>
+          <div class="xp-pill">⭐ <span id="quizLiveXp">0</span> XP</div>
+        </div>
+        <div class="quiz-card card" id="quizCard"></div>
+      </div>
+    </section>
+
+    <section id="words" class="screen hidden">
+      <div class="page-title">
+        <div><div class="eyebrow">Kişisel sözlüğün</div><h1 style="font-size:clamp(2.2rem,5vw,3.5rem);margin-bottom:8px">Kelimelerim</h1><p class="muted">Kitaplardan seçtiğin kelimeleri burada tekrar et.</p></div>
+        <button class="btn btn-primary" id="startWordQuiz">Kaydettiğim kelimelerden quiz</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card card"><span>Toplam kelime</span><strong id="wordTotal">0</strong></div>
+        <div class="stat-card card"><span>Bugün tekrar</span><strong id="wordDue">0</strong></div>
+        <div class="stat-card card"><span>Öğreniyorum</span><strong id="wordLearning">0</strong></div>
+        <div class="stat-card card"><span>Öğrendim</span><strong id="wordKnown">0</strong></div>
+      </div>
+      <div class="word-layout">
+        <div>
+          <div class="filters" id="wordFilters" style="margin-bottom:14px">
+            <button class="filter-btn active" data-word-filter="all">Tümü</button>
+            <button class="filter-btn" data-word-filter="new">Yeni</button>
+            <button class="filter-btn" data-word-filter="learning">Öğreniyorum</button>
+            <button class="filter-btn" data-word-filter="known">Öğrendim</button>
+          </div>
+          <div class="word-list" id="wordList"></div>
+        </div>
+        <aside class="review-card card" id="reviewCard"></aside>
+      </div>
+    </section>
+
+    <section id="progress" class="screen hidden">
+      <div class="page-title">
+        <div><div class="eyebrow">Öğrenme raporun</div><h1 style="font-size:clamp(2.2rem,5vw,3.5rem);margin-bottom:8px">İlerlemem</h1><p class="muted">Okudukların, öğrendiklerin ve sıradaki hedefin.</p></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card card"><span>Toplam XP</span><strong id="progressXp">0</strong></div>
+        <div class="stat-card card"><span>Tamamlanan kitap</span><strong id="progressBooks">0</strong></div>
+        <div class="stat-card card"><span>Kaydedilen kelime</span><strong id="progressWords">0</strong></div>
+        <div class="stat-card card"><span>Doğru quiz cevabı</span><strong id="progressCorrect">0</strong></div>
+      </div>
+      <div class="section-head"><div><div class="eyebrow">Başarılar</div><h2>Rozetlerin</h2></div></div>
+      <div class="badges-grid" id="badgesGrid"></div>
+      <div class="section-head"><div><div class="eyebrow">Kişisel çalışma</div><h2>Hata defterim</h2><p class="muted">Son quizlerde zorlandığın sorular.</p></div></div>
+      <div class="error-list" id="errorList"></div>
+      <div class="settings-card card">
+        <h3>Profil ve veriler</h3>
+        <p class="muted">Profil türünü veya seviyeni değiştirebilir; istersen bu cihazdaki ilerlemeyi sıfırlayabilirsin.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:9px">
+          <button class="btn btn-secondary" id="changeProfile">Profili değiştir</button>
+          <button class="btn btn-danger" id="resetProgress">İlerlemeyi sıfırla</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="mobile-nav hidden" id="mobileNav" aria-label="Mobil menü">
+    <button class="active" data-go="library"><span>📚</span>Kitaplık</button>
+    <button data-go="words"><span>⭐</span>Kelimeler</button>
+    <button data-go="progress"><span>🏆</span>İlerleme</button>
+  </nav>
+
+  <dialog id="wordDialog">
+    <div class="dialog-body">
+      <div class="dialog-head">
+        <div><div class="eyebrow">Kelime kartı</div><h2 class="word-detail-title" id="dialogWord"></h2><div class="word-meaning" id="dialogMeaning"></div></div>
+        <button class="dialog-close" id="closeWordDialog" aria-label="Kapat">✕</button>
+      </div>
+      <div class="word-data" id="dialogData"></div>
+      <div class="example-box" id="dialogExample"></div>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" id="speakWord">🔊 Dinle</button>
+        <button class="btn btn-primary" id="saveWord">⭐ Kelimelerime ekle</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="confirmDialog">
+    <div class="dialog-body">
+      <div class="dialog-head"><div><div class="eyebrow">Emin misin?</div><h2>İlerlemen sıfırlansın mı?</h2></div><button class="dialog-close" id="cancelReset">✕</button></div>
+      <p class="muted">Puanların, kayıtlı kelimelerin ve tamamladığın kitaplar bu cihazdan silinecek.</p>
+      <div class="dialog-actions"><button class="btn btn-secondary" id="keepProgress">Vazgeç</button><button class="btn btn-danger" id="confirmReset">Evet, sıfırla</button></div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (function(){
+    "use strict";
+
+    var STORIES = [
+      {
+        id:"adult-morning-jena", audience:"adult", unit:1, topic:"Günlük yaşam", icon:"☀️", color:"linear-gradient(135deg,#146c7e,#143d59)",
+        title:"Ein neuer Morgen in Jena", subtitle:"Yeni bir şehirde güne başlamak", minutes:5,
+        intro:"Elif’in Jena’daki ilk sabahına eşlik et; tanışma, saatler ve günlük rutin ifadelerini öğren.",
+        goals:["Selamlaşma ve kendini tanıtma","Saatleri söyleme","Günlük rutin fiilleri","ich ve du ile basit cümleler"],
+        grammar:"Präsens · ich/du", culture:"Almanya’da tanımadığınız yetişkinlerle ilk konuşmada genellikle “Sie” kullanılır. “Du” daha samimi bir hitaptır.",
+        paragraphs:[
+          {de:"Es ist sieben Uhr. Elif wacht in ihrer neuen Wohnung in Jena auf. Sie öffnet das Fenster. Die Luft ist kühl, aber die Sonne scheint. Auf der Straße fahren Fahrräder und eine Straßenbahn.",tr:"Saat yedi. Elif, Jena’daki yeni evinde uyanıyor. Pencereyi açıyor. Hava serin ama güneş parlıyor. Sokakta bisikletler ve bir tramvay gidiyor."},
+          {de:"Elif geht in die Küche. Sie macht Tee und ein Käsebrot. Heute beginnt ihr Deutschkurs. Sie ist ein bisschen nervös, aber auch glücklich. Um acht Uhr verlässt sie die Wohnung.",tr:"Elif mutfağa gidiyor. Çay ve peynirli ekmek hazırlıyor. Bugün Almanca kursu başlıyor. Biraz gergin ama aynı zamanda mutlu. Saat sekizde evden çıkıyor."},
+          {de:"An der Haltestelle wartet eine Frau. Elif fragt: Entschuldigung, fährt diese Straßenbahn zum Stadtzentrum? Die Frau lächelt und sagt: Ja, die Linie eins fährt direkt dorthin.",tr:"Durakta bir kadın bekliyor. Elif soruyor: Affedersiniz, bu tramvay şehir merkezine gidiyor mu? Kadın gülümsüyor ve şöyle diyor: Evet, bir numaralı hat doğrudan oraya gidiyor."},
+          {de:"Im Kurs sitzt Elif neben Tom. Er sagt: Guten Morgen! Ich heiße Tom. Wie heißt du? Elif antwortet: Ich heiße Elif und komme aus der Türkei. Jetzt wohne ich in Jena. Ihr erster deutscher Dialog ist geschafft.",tr:"Kursta Elif, Tom’un yanında oturuyor. Tom: Günaydın! Benim adım Tom. Senin adın ne? diyor. Elif cevaplıyor: Benim adım Elif ve Türkiye’den geliyorum. Şimdi Jena’da yaşıyorum. İlk Almanca diyaloğunu başardı."}
+        ],
+        vocab:[
+          {lemma:"aufwachen",display:"aufwachen",forms:["wacht","auf"],meaning:"uyanmak",type:"Fiil",example:"Elif wacht um sieben Uhr auf.",exampleTr:"Elif saat yedide uyanıyor."},
+          {lemma:"die Wohnung",display:"die Wohnung",forms:["wohnung"],meaning:"ev, daire",type:"İsim",plural:"die Wohnungen",example:"Die Wohnung ist neu.",exampleTr:"Daire yeni."},
+          {lemma:"das Fenster",display:"das Fenster",forms:["fenster"],meaning:"pencere",type:"İsim",plural:"die Fenster",example:"Sie öffnet das Fenster.",exampleTr:"O, pencereyi açıyor."},
+          {lemma:"kühl",display:"kühl",forms:["kühl"],meaning:"serin",type:"Sıfat",example:"Die Luft ist kühl.",exampleTr:"Hava serin."},
+          {lemma:"scheinen",display:"scheinen",forms:["scheint"],meaning:"parlamak",type:"Fiil",example:"Die Sonne scheint.",exampleTr:"Güneş parlıyor."},
+          {lemma:"beginnen",display:"beginnen",forms:["beginnt"],meaning:"başlamak",type:"Fiil",example:"Der Kurs beginnt heute.",exampleTr:"Kurs bugün başlıyor."},
+          {lemma:"verlassen",display:"verlassen",forms:["verlässt"],meaning:"ayrılmak, terk etmek",type:"Fiil",example:"Sie verlässt die Wohnung.",exampleTr:"O, evden çıkıyor."},
+          {lemma:"die Haltestelle",display:"die Haltestelle",forms:["haltestelle"],meaning:"durak",type:"İsim",plural:"die Haltestellen",example:"Ich warte an der Haltestelle.",exampleTr:"Durakta bekliyorum."},
+          {lemma:"warten",display:"warten",forms:["wartet"],meaning:"beklemek",type:"Fiil",example:"Die Frau wartet.",exampleTr:"Kadın bekliyor."},
+          {lemma:"fragen",display:"fragen",forms:["fragt"],meaning:"sormak",type:"Fiil",example:"Elif fragt eine Frau.",exampleTr:"Elif bir kadına soruyor."},
+          {lemma:"antworten",display:"antworten",forms:["antwortet"],meaning:"cevap vermek",type:"Fiil",example:"Elif antwortet.",exampleTr:"Elif cevap veriyor."},
+          {lemma:"wohnen",display:"wohnen",forms:["wohnt","wohne"],meaning:"ikamet etmek, oturmak",type:"Fiil",example:"Ich wohne in Jena.",exampleTr:"Jena’da oturuyorum."}
+        ],
+        quiz:[
+          {q:"Elif saat kaçta uyanıyor?",options:["Saat altıda","Saat yedide","Saat sekizde","Saat dokuzda"],answer:1,explain:"Metinde “Es ist sieben Uhr” deniyor."},
+          {q:"Elif kahvaltıda ne hazırlıyor?",options:["Kahve ve kek","Çorba","Çay ve peynirli ekmek","Yumurta ve süt"],answer:2,explain:"Sie macht Tee und ein Käsebrot."},
+          {q:"Elif bugün nereye gidecek?",options:["İşe","Almanca kursuna","Doktora","Markete"],answer:1,explain:"Heute beginnt ihr Deutschkurs."},
+          {q:"“die Haltestelle” ne demektir?",options:["Durak","İstasyon binası","Cadde","Ev"],answer:0,explain:"Haltestelle, otobüs veya tramvay durağıdır."},
+          {q:"Hangi araç şehir merkezine gidiyor?",options:["Otobüs 5","Tren 2","Tramvay 1","Taksi"],answer:2,explain:"Die Linie eins fährt direkt dorthin."},
+          {q:"“Ich heiße Elif” cümlesinin anlamı nedir?",options:["Elif’i tanıyorum","Benim adım Elif","Elif burada yaşıyor","Elif mutludur"],answer:1,explain:"heißen, adı olmak anlamında kullanılır."},
+          {q:"Tom nerede oturuyor?",options:["Elif’in yanında","Pencerenin yanında","Tramvayda","Evde"],answer:0,explain:"Im Kurs sitzt Elif neben Tom."},
+          {q:"Elif nereden geliyor?",options:["Almanya","İspanya","Türkiye","İtalya"],answer:2,explain:"Sie sagt: “Ich komme aus der Türkei.”"},
+          {q:"“Die Sonne scheint” ne demektir?",options:["Yağmur yağıyor","Güneş parlıyor","Hava soğuyor","Gün bitiyor"],answer:1,explain:"scheinen, burada parlamak anlamındadır."},
+          {q:"Hikâyenin sonunda Elif neyi başarıyor?",options:["İlk Almanca diyaloğunu","Bir sınavı","Bisiklet sürmeyi","Yeni bir iş bulmayı"],answer:0,explain:"Ihr erster deutscher Dialog ist geschafft."}
+        ]
+      },
+      {
+        id:"adult-supermarket", audience:"adult", unit:2, topic:"Alışveriş", icon:"🧺", color:"linear-gradient(135deg,#a34f2c,#e19051)",
+        title:"Im Supermarkt", subtitle:"Fiyatlar, yiyecekler ve nazik istekler", minutes:6,
+        intro:"Deniz’in alışveriş listesini tamamla; ürün adlarını, miktarları ve fiyat sormayı öğren.",
+        goals:["Yiyecek ve içecek adları","Fiyat ve miktar sorma","Ich möchte… kalıbı","Almanya’daki Pfand sistemi"],
+        grammar:"Akkusativ · ich möchte", culture:"Birçok şişe ve kutu için kasada Pfand ödenir. Boş ambalajı iade makinesine verdiğinizde bu parayı geri alırsınız.",
+        paragraphs:[
+          {de:"Deniz braucht heute Lebensmittel. Auf seiner Liste stehen Brot, Milch, Äpfel, Tomaten und Reis. Im Supermarkt nimmt er zuerst einen Einkaufskorb. Das Brot kostet zwei Euro.",tr:"Deniz’in bugün gıda ürünlerine ihtiyacı var. Listesinde ekmek, süt, elma, domates ve pirinç var. Markette önce bir alışveriş sepeti alıyor. Ekmek iki avro."},
+          {de:"Bei den Äpfeln sieht Deniz zwei Sorten. Die roten Äpfel sind süß, die grünen Äpfel sind sauer. Er nimmt vier rote Äpfel und ein Kilo Tomaten. Dann sucht er den Reis.",tr:"Elmaların yanında Deniz iki çeşit görüyor. Kırmızı elmalar tatlı, yeşil elmalar ekşi. Dört kırmızı elma ve bir kilo domates alıyor. Sonra pirinci arıyor."},
+          {de:"Eine Mitarbeiterin steht im Gang. Deniz fragt höflich: Entschuldigung, wo finde ich Reis? Sie antwortet: Im Regal dort links, neben den Nudeln. Deniz bedankt sich und findet den Reis.",tr:"Koridorda bir çalışan duruyor. Deniz nazikçe soruyor: Affedersiniz, pirinci nerede bulabilirim? O cevaplıyor: Soldaki rafta, makarnanın yanında. Deniz teşekkür ediyor ve pirinci buluyor."},
+          {de:"An der Kasse sagt der Kassierer: Das macht zwölf Euro achtzig. Möchten Sie eine Tüte? Deniz sagt: Nein, danke. Ich habe eine Tasche. Er bezahlt mit Karte und nimmt den Kassenbon.",tr:"Kasada kasiyer: Toplam on iki avro seksen sent, diyor. Poşet ister misiniz? Deniz: Hayır, teşekkürler. Çantam var, diyor. Kartla ödüyor ve fişi alıyor."}
+        ],
+        vocab:[
+          {lemma:"brauchen",display:"brauchen",forms:["braucht"],meaning:"ihtiyaç duymak",type:"Fiil",example:"Ich brauche Milch.",exampleTr:"Süte ihtiyacım var."},
+          {lemma:"das Lebensmittel",display:"das Lebensmittel",forms:["lebensmittel"],meaning:"gıda ürünü",type:"İsim",plural:"die Lebensmittel",example:"Wir kaufen Lebensmittel.",exampleTr:"Gıda ürünleri alıyoruz."},
+          {lemma:"die Liste",display:"die Liste",forms:["liste"],meaning:"liste",type:"İsim",plural:"die Listen",example:"Das steht auf meiner Liste.",exampleTr:"Bu, listemde yazıyor."},
+          {lemma:"der Einkaufskorb",display:"der Einkaufskorb",forms:["einkaufskorb"],meaning:"alışveriş sepeti",type:"İsim",plural:"die Einkaufskörbe",example:"Ich nehme einen Einkaufskorb.",exampleTr:"Bir alışveriş sepeti alıyorum."},
+          {lemma:"kosten",display:"kosten",forms:["kostet"],meaning:"fiyatı olmak",type:"Fiil",example:"Das Brot kostet zwei Euro.",exampleTr:"Ekmek iki avro."},
+          {lemma:"süß",display:"süß",forms:["süß"],meaning:"tatlı",type:"Sıfat",example:"Der Apfel ist süß.",exampleTr:"Elma tatlı."},
+          {lemma:"sauer",display:"sauer",forms:["sauer"],meaning:"ekşi",type:"Sıfat",example:"Die Zitrone ist sauer.",exampleTr:"Limon ekşi."},
+          {lemma:"suchen",display:"suchen",forms:["sucht"],meaning:"aramak",type:"Fiil",example:"Er sucht den Reis.",exampleTr:"O, pirinci arıyor."},
+          {lemma:"das Regal",display:"das Regal",forms:["regal"],meaning:"raf",type:"İsim",plural:"die Regale",example:"Der Reis ist im Regal.",exampleTr:"Pirinç rafta."},
+          {lemma:"die Kasse",display:"die Kasse",forms:["kasse"],meaning:"kasa",type:"İsim",plural:"die Kassen",example:"Ich warte an der Kasse.",exampleTr:"Kasada bekliyorum."},
+          {lemma:"bezahlen",display:"bezahlen",forms:["bezahlt"],meaning:"ödemek",type:"Fiil",example:"Er bezahlt mit Karte.",exampleTr:"Kartla ödüyor."},
+          {lemma:"der Kassenbon",display:"der Kassenbon",forms:["kassenbon"],meaning:"kasa fişi",type:"İsim",plural:"die Kassenbons",example:"Nehmen Sie den Kassenbon.",exampleTr:"Fişi alın."}
+        ],
+        quiz:[
+          {q:"Deniz’in listesinde hangisi yok?",options:["Süt","Pirinç","Peynir","Domates"],answer:2,explain:"Listede Brot, Milch, Äpfel, Tomaten und Reis var."},
+          {q:"Ekmek kaç avro?",options:["1 €","2 €","3 €","4 €"],answer:1,explain:"Das Brot kostet zwei Euro."},
+          {q:"Deniz hangi elmaları alıyor?",options:["Yeşil","Sarı","Kırmızı","Hiç elma almıyor"],answer:2,explain:"Er nimmt vier rote Äpfel."},
+          {q:"“sauer” hangi anlama gelir?",options:["Tatlı","Tuzlu","Acı","Ekşi"],answer:3,explain:"Grüne Äpfel sind sauer: Yeşil elmalar ekşidir."},
+          {q:"Pirinç nerede?",options:["Makarnanın yanında","Sütün yanında","Kasada","Sepette"],answer:0,explain:"Im Regal links, neben den Nudeln."},
+          {q:"Toplam tutar nedir?",options:["12,18 €","20,80 €","12,80 €","2,80 €"],answer:2,explain:"Das macht zwölf Euro achtzig."},
+          {q:"Deniz neden poşet almıyor?",options:["Parası yok","Çantası var","Ürünleri bırakıyor","Kasiyer vermiyor"],answer:1,explain:"Er sagt: “Ich habe eine Tasche.”"},
+          {q:"“Wo finde ich Reis?” ne demektir?",options:["Pirinç kaç para?","Pirinç ister misiniz?","Pirinci nerede bulabilirim?","Pirinç lezzetli mi?"],answer:2,explain:"wo = nerede, finden = bulmak."},
+          {q:"Deniz nasıl ödeme yapıyor?",options:["Nakit","Telefonla","Kartla","Kuponla"],answer:2,explain:"Er bezahlt mit Karte."},
+          {q:"Pfand sisteminde ne olur?",options:["Ürünler ücretsizdir","Ambalajı iade edince depozito geri alınır","Fiş verilmez","Sadece nakit kullanılır"],answer:1,explain:"İçecek ambalajı iade edildiğinde Pfand geri alınır."}
+        ]
+      },
+      {
+        id:"adult-leipzig-train", audience:"adult", unit:3, topic:"Ulaşım", icon:"🚆", color:"linear-gradient(135deg,#3f4c88,#6b78bd)",
+        title:"Die Fahrt nach Leipzig", subtitle:"Tren bileti, saatler ve yönler", minutes:6,
+        intro:"Mert’in Leipzig yolculuğunda peronu bul, bileti kontrol et ve ulaşım ifadelerini öğren.",
+        goals:["Saat ve peron bilgileri","Tren yolculuğu kelimeleri","Yön sorma","müssen ve können fiilleri"],
+        grammar:"Modalverben · müssen/können", culture:"Almanya’da bölgesel trenlerde biletinizi yolculuktan önce almanız gerekir. Bazı biletlerin ayrıca damgalanması gerekebilir.",
+        paragraphs:[
+          {de:"Mert möchte heute nach Leipzig fahren. Sein Zug fährt um neun Uhr zehn. Er kommt früh am Bahnhof an und kauft am Automaten eine Fahrkarte. Auf der Anzeige steht: Leipzig Hauptbahnhof, Gleis vier.",tr:"Mert bugün Leipzig’e gitmek istiyor. Treni saat dokuzu on geçe kalkıyor. İstasyona erken geliyor ve otomattan bir bilet alıyor. Panoda şöyle yazıyor: Leipzig Merkez İstasyonu, dördüncü peron."},
+          {de:"Mert findet Gleis vier nicht. Er fragt einen Mann: Entschuldigung, wie komme ich zu Gleis vier? Der Mann zeigt nach rechts und sagt: Gehen Sie die Treppe hoch. Das Gleis ist neben dem kleinen Café.",tr:"Mert dördüncü peronu bulamıyor. Bir adama soruyor: Affedersiniz, dördüncü perona nasıl giderim? Adam sağı gösteriyor ve şöyle diyor: Merdivenden yukarı çıkın. Peron küçük kafenin yanında."},
+          {de:"Der Zug hat fünf Minuten Verspätung. Mert wartet und liest die Information auf der Anzeige. Dann kommt der Zug. Er steigt ein, findet einen freien Platz und setzt sich ans Fenster.",tr:"Tren beş dakika gecikmeli. Mert bekliyor ve panodaki bilgiyi okuyor. Sonra tren geliyor. Trene biniyor, boş bir yer buluyor ve pencerenin yanına oturuyor."},
+          {de:"Eine Kontrolleurin kommt. Mert zeigt seine Fahrkarte. Alles ist in Ordnung. Nach einer Stunde erreicht der Zug Leipzig. Mert steigt aus und folgt den Schildern zum Ausgang.",tr:"Bir bilet kontrol görevlisi geliyor. Mert biletini gösteriyor. Her şey yolunda. Bir saat sonra tren Leipzig’e ulaşıyor. Mert trenden iniyor ve çıkış tabelalarını takip ediyor."}
+        ],
+        vocab:[
+          {lemma:"der Bahnhof",display:"der Bahnhof",forms:["bahnhof"],meaning:"tren istasyonu",type:"İsim",plural:"die Bahnhöfe",example:"Ich bin am Bahnhof.",exampleTr:"Tren istasyonundayım."},
+          {lemma:"die Fahrkarte",display:"die Fahrkarte",forms:["fahrkarte"],meaning:"bilet",type:"İsim",plural:"die Fahrkarten",example:"Ich kaufe eine Fahrkarte.",exampleTr:"Bir bilet alıyorum."},
+          {lemma:"der Automat",display:"der Automat",forms:["automaten"],meaning:"otomat",type:"İsim",plural:"die Automaten",example:"Die Fahrkarte ist am Automaten.",exampleTr:"Bilet otomattan alınır."},
+          {lemma:"die Anzeige",display:"die Anzeige",forms:["anzeige"],meaning:"bilgi panosu, gösterge",type:"İsim",plural:"die Anzeigen",example:"Lesen Sie die Anzeige.",exampleTr:"Bilgi panosunu okuyun."},
+          {lemma:"das Gleis",display:"das Gleis",forms:["gleis"],meaning:"peron, demir yolu",type:"İsim",plural:"die Gleise",example:"Der Zug fährt von Gleis vier.",exampleTr:"Tren dördüncü perondan kalkıyor."},
+          {lemma:"die Treppe",display:"die Treppe",forms:["treppe"],meaning:"merdiven",type:"İsim",plural:"die Treppen",example:"Gehen Sie die Treppe hoch.",exampleTr:"Merdivenden yukarı çıkın."},
+          {lemma:"die Verspätung",display:"die Verspätung",forms:["verspätung"],meaning:"gecikme",type:"İsim",plural:"die Verspätungen",example:"Der Zug hat Verspätung.",exampleTr:"Tren gecikmeli."},
+          {lemma:"einsteigen",display:"einsteigen",forms:["steigt","ein"],meaning:"binmek",type:"Fiil",example:"Mert steigt in den Zug ein.",exampleTr:"Mert trene biniyor."},
+          {lemma:"frei",display:"frei",forms:["freien"],meaning:"boş, müsait",type:"Sıfat",example:"Der Platz ist frei.",exampleTr:"Yer boş."},
+          {lemma:"zeigen",display:"zeigen",forms:["zeigt"],meaning:"göstermek",type:"Fiil",example:"Er zeigt seine Fahrkarte.",exampleTr:"Biletini gösteriyor."},
+          {lemma:"erreichen",display:"erreichen",forms:["erreicht"],meaning:"ulaşmak",type:"Fiil",example:"Der Zug erreicht Leipzig.",exampleTr:"Tren Leipzig’e ulaşıyor."},
+          {lemma:"der Ausgang",display:"der Ausgang",forms:["ausgang"],meaning:"çıkış",type:"İsim",plural:"die Ausgänge",example:"Wo ist der Ausgang?",exampleTr:"Çıkış nerede?"}
+        ],
+        quiz:[
+          {q:"Mert nereye gidiyor?",options:["Berlin","Leipzig","Dresden","München"],answer:1,explain:"Mert möchte nach Leipzig fahren."},
+          {q:"Tren saat kaçta kalkıyor?",options:["08.10","09.00","09.10","10.09"],answer:2,explain:"Sein Zug fährt um neun Uhr zehn."},
+          {q:"Tren hangi perondan kalkıyor?",options:["2","3","4","5"],answer:2,explain:"Auf der Anzeige steht Gleis vier."},
+          {q:"Mert perona nasıl gidiyor?",options:["Merdivenden yukarı","Asansörle aşağı","Cafenin içinden","Otobüsle"],answer:0,explain:"Gehen Sie die Treppe hoch."},
+          {q:"Tren ne kadar gecikiyor?",options:["5 dakika","10 dakika","15 dakika","1 saat"],answer:0,explain:"Der Zug hat fünf Minuten Verspätung."},
+          {q:"“einsteigen” ne demektir?",options:["İnmek","Beklemek","Binmek","Koşmak"],answer:2,explain:"Mert steigt in den Zug ein: Mert trene biniyor."},
+          {q:"Mert nerede oturuyor?",options:["Kapının yanında","Pencerenin yanında","Cafede","Ayakta"],answer:1,explain:"Er setzt sich ans Fenster."},
+          {q:"Kontrol görevlisine ne gösteriyor?",options:["Pasaport","Telefon","Bilet","Para"],answer:2,explain:"Mert zeigt seine Fahrkarte."},
+          {q:"Yolculuk ne kadar sürüyor?",options:["Yarım saat","Bir saat","İki saat","Beş dakika"],answer:1,explain:"Nach einer Stunde erreicht der Zug Leipzig."},
+          {q:"İstasyondan çıkmak için neyi takip ediyor?",options:["İnsanları","Treni","Haritayı","Tabelaları"],answer:3,explain:"Er folgt den Schildern zum Ausgang."}
+        ]
+      },
+      {
+        id:"adult-first-workday", audience:"adult", unit:4, topic:"İş hayatı", icon:"💼", color:"linear-gradient(135deg,#405b45,#729267)",
+        title:"Der erste Arbeitstag", subtitle:"İş yerinde tanışma ve basit görevler", minutes:7,
+        intro:"Zeynep’in ilk iş gününü oku; meslekleri, ofis eşyalarını ve nazik iş ifadelerini öğren.",
+        goals:["İş yerinde kendini tanıtma","Ofis ve meslek kelimeleri","Basit görevleri anlama","Resmî hitap: Sie"],
+        grammar:"Können Sie…? · emir ve rica", culture:"Alman iş yerlerinde dakiklik önemlidir. İlk gün biraz erken gelmek ve çalışma arkadaşlarına selam vermek iyi bir başlangıçtır.",
+        paragraphs:[
+          {de:"Zeynep arbeitet heute zum ersten Mal in einem kleinen Büro. Sie kommt zehn Minuten früh. Ihr Chef, Herr Weber, begrüßt sie: Guten Morgen, Frau Kaya. Schön, dass Sie da sind.",tr:"Zeynep bugün ilk kez küçük bir ofiste çalışıyor. On dakika erken geliyor. Müdürü Bay Weber onu karşılıyor: Günaydın Bayan Kaya. Burada olmanız güzel."},
+          {de:"Herr Weber zeigt Zeynep ihren Schreibtisch. Auf dem Tisch stehen ein Computer, ein Telefon und eine Lampe. Dann stellt er die Kollegen vor. Anna arbeitet im Verkauf und Paul ist Techniker.",tr:"Bay Weber, Zeynep’e masasını gösteriyor. Masanın üzerinde bilgisayar, telefon ve lamba var. Sonra çalışma arkadaşlarını tanıtıyor. Anna satış bölümünde çalışıyor ve Paul teknisyen."},
+          {de:"Zeyneps erste Aufgabe ist einfach. Sie soll eine E-Mail lesen und drei Dokumente sortieren. Bei einem Wort ist sie unsicher. Sie fragt Anna: Können Sie mir bitte helfen? Anna erklärt das Wort langsam.",tr:"Zeynep’in ilk görevi kolay. Bir e-posta okuması ve üç belgeyi düzenlemesi gerekiyor. Bir kelimeden emin değil. Anna’ya soruyor: Lütfen bana yardım edebilir misiniz? Anna kelimeyi yavaşça açıklıyor."},
+          {de:"Um zwölf Uhr machen alle Mittagspause. Die Kollegen essen zusammen. Zeynep erzählt ein wenig über sich. Am Nachmittag beendet sie ihre Aufgabe. Herr Weber sagt: Sehr gut, danke. Zeynep ist müde, aber zufrieden.",tr:"Saat on ikide herkes öğle arası veriyor. Çalışma arkadaşları birlikte yemek yiyor. Zeynep biraz kendinden bahsediyor. Öğleden sonra görevini bitiriyor. Bay Weber: Çok iyi, teşekkürler, diyor. Zeynep yorgun ama memnun."}
+        ],
+        vocab:[
+          {lemma:"arbeiten",display:"arbeiten",forms:["arbeitet"],meaning:"çalışmak",type:"Fiil",example:"Zeynep arbeitet im Büro.",exampleTr:"Zeynep ofiste çalışıyor."},
+          {lemma:"das Büro",display:"das Büro",forms:["büro"],meaning:"ofis",type:"İsim",plural:"die Büros",example:"Das Büro ist klein.",exampleTr:"Ofis küçük."},
+          {lemma:"begrüßen",display:"begrüßen",forms:["begrüßt"],meaning:"selamlamak, karşılamak",type:"Fiil",example:"Der Chef begrüßt Zeynep.",exampleTr:"Müdür Zeynep’i karşılıyor."},
+          {lemma:"der Schreibtisch",display:"der Schreibtisch",forms:["schreibtisch"],meaning:"çalışma masası",type:"İsim",plural:"die Schreibtische",example:"Der Computer steht auf dem Schreibtisch.",exampleTr:"Bilgisayar çalışma masasının üzerinde."},
+          {lemma:"der Kollege",display:"der Kollege",forms:["kollegen"],meaning:"erkek çalışma arkadaşı",type:"İsim",plural:"die Kollegen",example:"Die Kollegen essen zusammen.",exampleTr:"Çalışma arkadaşları birlikte yemek yiyor."},
+          {lemma:"die Aufgabe",display:"die Aufgabe",forms:["aufgabe"],meaning:"görev",type:"İsim",plural:"die Aufgaben",example:"Die Aufgabe ist einfach.",exampleTr:"Görev kolay."},
+          {lemma:"das Dokument",display:"das Dokument",forms:["dokumente"],meaning:"belge",type:"İsim",plural:"die Dokumente",example:"Sie sortiert Dokumente.",exampleTr:"Belgeleri düzenliyor."},
+          {lemma:"unsicher",display:"unsicher",forms:["unsicher"],meaning:"emin olmayan",type:"Sıfat",example:"Sie ist bei einem Wort unsicher.",exampleTr:"Bir kelimeden emin değil."},
+          {lemma:"helfen",display:"helfen",forms:["helfen"],meaning:"yardım etmek",type:"Fiil",example:"Können Sie mir helfen?",exampleTr:"Bana yardım edebilir misiniz?"},
+          {lemma:"erklären",display:"erklären",forms:["erklärt"],meaning:"açıklamak",type:"Fiil",example:"Anna erklärt das Wort.",exampleTr:"Anna kelimeyi açıklıyor."},
+          {lemma:"die Mittagspause",display:"die Mittagspause",forms:["mittagspause"],meaning:"öğle arası",type:"İsim",plural:"die Mittagspausen",example:"Um zwölf ist Mittagspause.",exampleTr:"Saat on ikide öğle arası."},
+          {lemma:"zufrieden",display:"zufrieden",forms:["zufrieden"],meaning:"memnun",type:"Sıfat",example:"Zeynep ist zufrieden.",exampleTr:"Zeynep memnun."}
+        ],
+        quiz:[
+          {q:"Zeynep nereye geliyor?",options:["Okula","Küçük bir ofise","Hastaneye","Markete"],answer:1,explain:"Sie arbeitet in einem kleinen Büro."},
+          {q:"Zeynep kaç dakika erken geliyor?",options:["5","10","15","20"],answer:1,explain:"Sie kommt zehn Minuten früh."},
+          {q:"Zeynep’in müdürü kim?",options:["Paul","Herr Weber","Anna","Herr Kaya"],answer:1,explain:"Ihr Chef heißt Herr Weber."},
+          {q:"Masanın üzerinde hangisi yok?",options:["Bilgisayar","Telefon","Lamba","Televizyon"],answer:3,explain:"Auf dem Tisch stehen Computer, Telefon und Lampe."},
+          {q:"Paul’un mesleği nedir?",options:["Satış çalışanı","Öğretmen","Teknisyen","Doktor"],answer:2,explain:"Paul ist Techniker."},
+          {q:"Zeynep’in ilk görevi nedir?",options:["Telefon etmek","E-posta okuyup belgeleri düzenlemek","Yemek yapmak","Bilgisayar almak"],answer:1,explain:"Sie soll eine E-Mail lesen und drei Dokumente sortieren."},
+          {q:"“Können Sie mir bitte helfen?” ne demektir?",options:["Lütfen bana yardım edebilir misiniz?","Burada çalışıyor musunuz?","Bunu okuyabilir miyim?","Yardım istemiyorum."],answer:0,explain:"Bu, Sie ile kurulan nazik bir yardım talebidir."},
+          {q:"Öğle arası saat kaçta?",options:["10.00","11.00","12.00","13.00"],answer:2,explain:"Um zwölf Uhr machen alle Mittagspause."},
+          {q:"Zeynep görevini ne zaman bitiriyor?",options:["Sabah","Öğle arasında","Öğleden sonra","Ertesi gün"],answer:2,explain:"Am Nachmittag beendet sie ihre Aufgabe."},
+          {q:"Günün sonunda Zeynep nasıl hissediyor?",options:["Kızgın","Yorgun ama memnun","Korkmuş","Üzgün"],answer:1,explain:"Sie ist müde, aber zufrieden."}
+        ]
+      },
+      {
+        id:"child-school", audience:"child", unit:1, topic:"Okul", icon:"🎒", color:"linear-gradient(135deg,#764ba2,#a66dd4)",
+        title:"Mias erster Schultag", subtitle:"Yeni arkadaşlar ve okul eşyaları", minutes:5,
+        intro:"Mia ile sınıfa gir; okul eşyalarını, renkleri ve tanışma cümlelerini öğren.",
+        goals:["Okul eşyaları","Renkler","Kendini tanıtma","Arkadaşlık ve paylaşma"],
+        grammar:"Das ist… · mein/dein", culture:"Almanya’da çocuklar okula başladıkları ilk gün genellikle “Schultüte” adı verilen, küçük hediyelerle dolu büyük bir külah alırlar.",
+        paragraphs:[
+          {de:"Heute ist Mias erster Schultag. Sie trägt einen roten Rucksack. Darin sind zwei Hefte, drei Stifte, ein Radiergummi und eine Brotdose. Mia ist aufgeregt.",tr:"Bugün Mia’nın ilk okul günü. Kırmızı bir sırt çantası taşıyor. İçinde iki defter, üç kalem, bir silgi ve bir yemek kutusu var. Mia heyecanlı."},
+          {de:"Im Klassenzimmer sitzt ein Junge allein. Mia sagt: Hallo, ich heiße Mia. Wie heißt du? Der Junge antwortet: Ich bin Ben. Mein Lieblingsstift ist blau.",tr:"Sınıfta bir çocuk yalnız oturuyor. Mia: Merhaba, benim adım Mia. Senin adın ne? diyor. Çocuk: Ben Ben’im. En sevdiğim kalem mavi, diye cevaplıyor."},
+          {de:"Die Lehrerin Frau Klein bringt eine große Kiste. In der Kiste sind bunte Karten. Jedes Kind nimmt eine Karte. Mia hat eine gelbe Sonne. Ben hat einen grünen Baum.",tr:"Öğretmen Bayan Klein büyük bir kutu getiriyor. Kutunun içinde renkli kartlar var. Her çocuk bir kart alıyor. Mia’nın sarı bir güneşi var. Ben’in yeşil bir ağacı var."},
+          {de:"Die Kinder suchen andere Karten mit Naturbildern. Mia und Ben finden einen blauen Fluss und eine weiße Wolke. Gemeinsam machen sie ein großes Bild. Am Ende sagt Mia: Schule macht Spaß!",tr:"Çocuklar doğa resimli diğer kartları arıyor. Mia ve Ben mavi bir nehir ve beyaz bir bulut buluyor. Birlikte büyük bir resim yapıyorlar. Sonunda Mia: Okul eğlenceli! diyor."}
+        ],
+        vocab:[
+          {lemma:"der Schultag",display:"der Schultag",forms:["schultag"],meaning:"okul günü",type:"İsim",plural:"die Schultage",example:"Heute ist der erste Schultag.",exampleTr:"Bugün ilk okul günü."},
+          {lemma:"der Rucksack",display:"der Rucksack",forms:["rucksack"],meaning:"sırt çantası",type:"İsim",plural:"die Rucksäcke",example:"Der Rucksack ist rot.",exampleTr:"Sırt çantası kırmızı."},
+          {lemma:"das Heft",display:"das Heft",forms:["hefte"],meaning:"defter",type:"İsim",plural:"die Hefte",example:"Ich habe zwei Hefte.",exampleTr:"İki defterim var."},
+          {lemma:"der Stift",display:"der Stift",forms:["stifte","lieblingsstift"],meaning:"kalem",type:"İsim",plural:"die Stifte",example:"Der Stift ist blau.",exampleTr:"Kalem mavi."},
+          {lemma:"der Radiergummi",display:"der Radiergummi",forms:["radiergummi"],meaning:"silgi",type:"İsim",plural:"die Radiergummis",example:"Das ist mein Radiergummi.",exampleTr:"Bu benim silgim."},
+          {lemma:"aufgeregt",display:"aufgeregt",forms:["aufgeregt"],meaning:"heyecanlı",type:"Sıfat",example:"Mia ist aufgeregt.",exampleTr:"Mia heyecanlı."},
+          {lemma:"das Klassenzimmer",display:"das Klassenzimmer",forms:["klassenzimmer"],meaning:"sınıf",type:"İsim",plural:"die Klassenzimmer",example:"Wir sind im Klassenzimmer.",exampleTr:"Sınıftayız."},
+          {lemma:"die Lehrerin",display:"die Lehrerin",forms:["lehrerin"],meaning:"kadın öğretmen",type:"İsim",plural:"die Lehrerinnen",example:"Die Lehrerin heißt Frau Klein.",exampleTr:"Öğretmenin adı Bayan Klein."},
+          {lemma:"die Kiste",display:"die Kiste",forms:["kiste"],meaning:"kutu, sandık",type:"İsim",plural:"die Kisten",example:"Die Karten sind in der Kiste.",exampleTr:"Kartlar kutuda."},
+          {lemma:"bunt",display:"bunt",forms:["bunte"],meaning:"rengârenk",type:"Sıfat",example:"Die Karten sind bunt.",exampleTr:"Kartlar rengârenk."},
+          {lemma:"gemeinsam",display:"gemeinsam",forms:["gemeinsam"],meaning:"birlikte",type:"Zarf",example:"Wir lernen gemeinsam.",exampleTr:"Birlikte öğreniyoruz."},
+          {lemma:"Spaß machen",display:"Spaß machen",forms:["spaß","macht"],meaning:"eğlenceli olmak",type:"İfade",example:"Schule macht Spaß.",exampleTr:"Okul eğlenceli."}
+        ],
+        quiz:[
+          {q:"Mia’nın çantası hangi renk?",options:["Mavi","Kırmızı","Yeşil","Sarı"],answer:1,explain:"Sie trägt einen roten Rucksack."},
+          {q:"Çantada kaç defter var?",options:["Bir","İki","Üç","Dört"],answer:1,explain:"Darin sind zwei Hefte."},
+          {q:"Mia sınıfta kiminle tanışıyor?",options:["Ben","Tom","Leo","Paul"],answer:0,explain:"Der Junge heißt Ben."},
+          {q:"Ben’in en sevdiği kalem hangi renk?",options:["Kırmızı","Sarı","Mavi","Beyaz"],answer:2,explain:"Mein Lieblingsstift ist blau."},
+          {q:"Öğretmenin adı nedir?",options:["Frau Blau","Frau Klein","Frau Mia","Frau Baum"],answer:1,explain:"Die Lehrerin heißt Frau Klein."},
+          {q:"Mia’nın kartında ne var?",options:["Yeşil ağaç","Sarı güneş","Mavi nehir","Beyaz bulut"],answer:1,explain:"Mia hat eine gelbe Sonne."},
+          {q:"“gemeinsam” ne demektir?",options:["Yalnız","Hızlı","Birlikte","Sessiz"],answer:2,explain:"Gemeinsam = birlikte."},
+          {q:"Çocuklar ne yapıyor?",options:["Büyük bir resim","Bir pasta","Bir oyuncak","Bir kitap"],answer:0,explain:"Gemeinsam machen sie ein großes Bild."},
+          {q:"“der Rucksack” nedir?",options:["Silgi","Sırt çantası","Kalem","Kutu"],answer:1,explain:"Rucksack, sırt çantasıdır."},
+          {q:"Mia hikâyenin sonunda ne söylüyor?",options:["Okul zor","Eve gitmek istiyorum","Okul eğlenceli","Çantam kayıp"],answer:2,explain:"Sie sagt: “Schule macht Spaß!”"}
+        ]
+      },
+      {
+        id:"child-water-drop", audience:"child", unit:2, topic:"Bilim ve doğa", icon:"💧", color:"linear-gradient(135deg,#1b8ab5,#64c8d1)",
+        title:"Lina, der kleine Wassertropfen", subtitle:"Suyun doğadaki yolculuğu", minutes:6,
+        intro:"Küçük su damlası Lina’yla denizden buluta, buluttan toprağa yolculuk et.",
+        goals:["Hava durumu kelimeleri","Doğa ve su döngüsü","Hareket fiilleri","Basit neden-sonuç ilişkisi"],
+        grammar:"sein · werden · hareket fiilleri", culture:"Almancada su döngüsüne “der Wasserkreislauf” denir: Wasser verdunstet, wird zur Wolke und fällt als Regen.",
+        paragraphs:[
+          {de:"Lina ist ein kleiner Wassertropfen im Meer. Die Sonne scheint warm. Das Wasser wird langsam warm, und Lina steigt in die Luft. Jetzt ist sie ganz leicht.",tr:"Lina denizdeki küçük bir su damlasıdır. Güneş sıcak parlıyor. Su yavaşça ısınıyor ve Lina havaya yükseliyor. Şimdi çok hafif."},
+          {de:"Oben trifft Lina viele andere Tropfen. Zusammen bilden sie eine weiße Wolke. Der Wind trägt die Wolke über einen Wald. Dort wird die Luft kalt.",tr:"Lina yukarıda birçok başka damlayla karşılaşıyor. Birlikte beyaz bir bulut oluşturuyorlar. Rüzgâr bulutu bir ormanın üzerinden taşıyor. Orada hava soğuyor."},
+          {de:"Lina wird schwer und fällt als Regen auf die Erde. Sie landet auf einem grünen Blatt. Vom Blatt fließt sie in den Boden. Eine kleine Blume nimmt das Wasser mit ihren Wurzeln auf.",tr:"Lina ağırlaşıyor ve yağmur olarak yeryüzüne düşüyor. Yeşil bir yaprağın üzerine konuyor. Yapraktan toprağa akıyor. Küçük bir çiçek suyu kökleriyle alıyor."},
+          {de:"Später kommt Lina wieder aus der Erde und fließt in einen Bach. Der Bach führt zum Fluss, und der Fluss führt zum Meer. Lina ist wieder zu Hause. Ihre Reise beginnt bald von vorn.",tr:"Daha sonra Lina yeniden topraktan çıkıyor ve bir dereye akıyor. Dere nehre, nehir de denize gidiyor. Lina yeniden evinde. Yolculuğu yakında baştan başlayacak."}
+        ],
+        vocab:[
+          {lemma:"der Wassertropfen",display:"der Wassertropfen",forms:["wassertropfen","tropfen"],meaning:"su damlası",type:"İsim",plural:"die Wassertropfen",example:"Lina ist ein Wassertropfen.",exampleTr:"Lina bir su damlasıdır."},
+          {lemma:"das Meer",display:"das Meer",forms:["meer"],meaning:"deniz",type:"İsim",plural:"die Meere",example:"Das Wasser ist im Meer.",exampleTr:"Su denizde."},
+          {lemma:"steigen",display:"steigen",forms:["steigt"],meaning:"yükselmek, çıkmak",type:"Fiil",example:"Lina steigt in die Luft.",exampleTr:"Lina havaya yükseliyor."},
+          {lemma:"leicht",display:"leicht",forms:["leicht"],meaning:"hafif",type:"Sıfat",example:"Der Tropfen ist leicht.",exampleTr:"Damla hafif."},
+          {lemma:"die Wolke",display:"die Wolke",forms:["wolke"],meaning:"bulut",type:"İsim",plural:"die Wolken",example:"Die Wolke ist weiß.",exampleTr:"Bulut beyaz."},
+          {lemma:"der Wind",display:"der Wind",forms:["wind"],meaning:"rüzgâr",type:"İsim",plural:"die Winde",example:"Der Wind trägt die Wolke.",exampleTr:"Rüzgâr bulutu taşıyor."},
+          {lemma:"der Wald",display:"der Wald",forms:["wald"],meaning:"orman",type:"İsim",plural:"die Wälder",example:"Die Wolke ist über dem Wald.",exampleTr:"Bulut ormanın üzerinde."},
+          {lemma:"der Regen",display:"der Regen",forms:["regen"],meaning:"yağmur",type:"İsim",example:"Der Regen fällt.",exampleTr:"Yağmur yağıyor."},
+          {lemma:"die Erde",display:"die Erde",forms:["erde"],meaning:"yeryüzü, toprak",type:"İsim",example:"Das Wasser fällt auf die Erde.",exampleTr:"Su yeryüzüne düşüyor."},
+          {lemma:"die Wurzel",display:"die Wurzel",forms:["wurzeln"],meaning:"kök",type:"İsim",plural:"die Wurzeln",example:"Die Blume hat Wurzeln.",exampleTr:"Çiçeğin kökleri var."},
+          {lemma:"der Bach",display:"der Bach",forms:["bach"],meaning:"dere",type:"İsim",plural:"die Bäche",example:"Das Wasser fließt in den Bach.",exampleTr:"Su dereye akıyor."},
+          {lemma:"fließen",display:"fließen",forms:["fließt"],meaning:"akmak",type:"Fiil",example:"Der Fluss fließt zum Meer.",exampleTr:"Nehir denize akıyor."}
+        ],
+        quiz:[
+          {q:"Lina nedir?",options:["Bir bulut","Bir su damlası","Bir balık","Bir çiçek"],answer:1,explain:"Lina ist ein kleiner Wassertropfen."},
+          {q:"Lina neden havaya yükseliyor?",options:["Su ısınıyor","Rüzgâr soğuyor","Yağmur yağıyor","Deniz donuyor"],answer:0,explain:"Die Sonne macht das Wasser warm."},
+          {q:"Damlalar birlikte ne oluşturuyor?",options:["Nehir","Orman","Bulut","Deniz"],answer:2,explain:"Zusammen bilden sie eine weiße Wolke."},
+          {q:"Bulutu ne taşıyor?",options:["Güneş","Rüzgâr","Çiçek","Dere"],answer:1,explain:"Der Wind trägt die Wolke."},
+          {q:"Lina yeryüzüne nasıl dönüyor?",options:["Kar olarak","Buz olarak","Yağmur olarak","Sis olarak"],answer:2,explain:"Sie fällt als Regen auf die Erde."},
+          {q:"Lina önce nereye konuyor?",options:["Yeşil bir yaprağa","Denize","Taşa","Eve"],answer:0,explain:"Sie landet auf einem grünen Blatt."},
+          {q:"Çiçek suyu neyle alıyor?",options:["Yapraklarıyla","Kökleriyle","Çiçekleriyle","Rüzgârla"],answer:1,explain:"Die Blume nimmt Wasser mit ihren Wurzeln auf."},
+          {q:"“fließen” ne demektir?",options:["Uçmak","Isınmak","Akmak","Uyumak"],answer:2,explain:"Der Fluss fließt: Nehir akar."},
+          {q:"Dere nereye gidiyor?",options:["Buluta","Nehre","Yaprağa","Havaya"],answer:1,explain:"Der Bach führt zum Fluss."},
+          {q:"Hikâye hangi doğa olayını öğretiyor?",options:["Mevsimler","Su döngüsü","Deprem","Gece ve gündüz"],answer:1,explain:"Lina’nın döngüsel yolculuğu su döngüsünü anlatır."}
+        ]
+      },
+      {
+        id:"child-space", audience:"child", unit:3, topic:"Macera", icon:"🚀", color:"linear-gradient(135deg,#25245c,#713c8d)",
+        title:"Noah fliegt zum Mond", subtitle:"Uzayda küçük bir bilim görevi", minutes:6,
+        intro:"Noah ve robotu Kiki ile Ay’a git; gezegenleri, sayıları ve uzay kelimelerini keşfet.",
+        goals:["Uzay ve gezegen kelimeleri","Sayılar ve yönler","können ile yetenek","Merak etmek ve gözlem yapmak"],
+        grammar:"können · soru cümleleri", culture:"Almancada Dünya “die Erde”, Ay “der Mond”, Güneş ise “die Sonne” olarak söylenir.",
+        paragraphs:[
+          {de:"Noah liebt den Himmel und die Sterne. Eines Nachts steht eine kleine Rakete in seinem Garten. Die Tür öffnet sich. Ein Roboter sagt: Hallo Noah! Ich bin Kiki. Möchtest du den Mond sehen?",tr:"Noah gökyüzünü ve yıldızları seviyor. Bir gece bahçesinde küçük bir roket duruyor. Kapı açılıyor. Bir robot: Merhaba Noah! Ben Kiki. Ay’ı görmek ister misin? diyor."},
+          {de:"Noah steigt ein. Die Rakete fliegt hoch. Durch das Fenster sieht Noah die Erde. Sie ist blau und rund. Kiki zeigt auf einen roten Planeten und sagt: Das ist der Mars.",tr:"Noah içeri biniyor. Roket yükseliyor. Noah pencereden Dünya’yı görüyor. Dünya mavi ve yuvarlak. Kiki kırmızı bir gezegeni gösterip: Bu Mars, diyor."},
+          {de:"Auf dem Mond ist alles still. Noah kann sehr hoch springen. Er zählt: eins, zwei, drei! Dann sammelt er drei kleine Steine. Einen Stein legt er in eine besondere Box für die Schule.",tr:"Ay’da her yer sessiz. Noah çok yükseğe zıplayabiliyor. Sayıyor: bir, iki, üç! Sonra üç küçük taş topluyor. Bir taşı okul için özel bir kutuya koyuyor."},
+          {de:"Bald fliegen Noah und Kiki zurück. Am Morgen liegt der Mondstein auf Noahs Tisch. War die Reise ein Traum? Kiki sendet eine Nachricht: Danke für deine Hilfe, Weltraumforscher!",tr:"Kısa süre sonra Noah ve Kiki geri uçuyor. Sabah Ay taşı Noah’ın masasının üzerinde duruyor. Yolculuk bir rüya mıydı? Kiki bir mesaj gönderiyor: Yardımın için teşekkürler, uzay araştırmacısı!"}
+        ],
+        vocab:[
+          {lemma:"der Himmel",display:"der Himmel",forms:["himmel"],meaning:"gökyüzü",type:"İsim",example:"Der Himmel ist dunkel.",exampleTr:"Gökyüzü karanlık."},
+          {lemma:"der Stern",display:"der Stern",forms:["sterne"],meaning:"yıldız",type:"İsim",plural:"die Sterne",example:"Die Sterne sind hell.",exampleTr:"Yıldızlar parlak."},
+          {lemma:"die Rakete",display:"die Rakete",forms:["rakete"],meaning:"roket",type:"İsim",plural:"die Raketen",example:"Die Rakete fliegt hoch.",exampleTr:"Roket yükseğe uçuyor."},
+          {lemma:"der Mond",display:"der Mond",forms:["mond","mondstein"],meaning:"Ay",type:"İsim",example:"Der Mond ist am Himmel.",exampleTr:"Ay gökyüzünde."},
+          {lemma:"die Erde",display:"die Erde",forms:["erde"],meaning:"Dünya, yeryüzü",type:"İsim",example:"Die Erde ist rund.",exampleTr:"Dünya yuvarlaktır."},
+          {lemma:"rund",display:"rund",forms:["rund"],meaning:"yuvarlak",type:"Sıfat",example:"Der Ball ist rund.",exampleTr:"Top yuvarlak."},
+          {lemma:"der Planet",display:"der Planet",forms:["planeten"],meaning:"gezegen",type:"İsim",plural:"die Planeten",example:"Der Mars ist ein Planet.",exampleTr:"Mars bir gezegendir."},
+          {lemma:"still",display:"still",forms:["still"],meaning:"sessiz",type:"Sıfat",example:"Auf dem Mond ist es still.",exampleTr:"Ay’da sessizdir."},
+          {lemma:"springen",display:"springen",forms:["springen"],meaning:"zıplamak",type:"Fiil",example:"Noah kann hoch springen.",exampleTr:"Noah yükseğe zıplayabilir."},
+          {lemma:"sammeln",display:"sammeln",forms:["sammelt"],meaning:"toplamak",type:"Fiil",example:"Er sammelt Steine.",exampleTr:"Taş topluyor."},
+          {lemma:"der Stein",display:"der Stein",forms:["steine","stein","mondstein"],meaning:"taş",type:"İsim",plural:"die Steine",example:"Der Stein ist klein.",exampleTr:"Taş küçük."},
+          {lemma:"der Weltraumforscher",display:"der Weltraumforscher",forms:["weltraumforscher"],meaning:"uzay araştırmacısı",type:"İsim",plural:"die Weltraumforscher",example:"Noah ist ein Weltraumforscher.",exampleTr:"Noah bir uzay araştırmacısı."}
+        ],
+        quiz:[
+          {q:"Noah neyi seviyor?",options:["Denizi","Gökyüzünü ve yıldızları","Trenleri","Ormanı"],answer:1,explain:"Noah liebt den Himmel und die Sterne."},
+          {q:"Roket nerede duruyor?",options:["Okulda","Sokakta","Bahçede","Ay’da"],answer:2,explain:"Die Rakete steht in seinem Garten."},
+          {q:"Robotun adı nedir?",options:["Kiki","Mia","Lina","Ben"],answer:0,explain:"Der Roboter sagt: “Ich bin Kiki.”"},
+          {q:"Dünya nasıl görünüyor?",options:["Kırmızı ve düz","Mavi ve yuvarlak","Yeşil ve kare","Sarı ve küçük"],answer:1,explain:"Sie ist blau und rund."},
+          {q:"Hangi gezegen kırmızıdır?",options:["Dünya","Venüs","Mars","Ay"],answer:2,explain:"Kiki zeigt auf einen roten Planeten: Mars."},
+          {q:"Noah Ay’da ne yapabiliyor?",options:["Yükseğe zıplamak","Yüzmek","Uçak sürmek","Yağmur yağdırmak"],answer:0,explain:"Noah kann sehr hoch springen."},
+          {q:"Kaç taş topluyor?",options:["Bir","İki","Üç","Dört"],answer:2,explain:"Er sammelt drei kleine Steine."},
+          {q:"Taşlardan birini neden kutuya koyuyor?",options:["Satmak için","Okul için","Kiki için","Kaybetmek için"],answer:1,explain:"Die Box ist für die Schule."},
+          {q:"Sabah masada ne var?",options:["Robot","Roket","Ay taşı","Kırmızı gezegen"],answer:2,explain:"Der Mondstein liegt auf Noahs Tisch."},
+          {q:"“springen” ne demektir?",options:["Zıplamak","Saymak","Uyumak","Toplamak"],answer:0,explain:"springen = zıplamak."}
+        ]
+      },
+      {
+        id:"child-breakfast", audience:"child", unit:4, topic:"Sağlıklı yaşam", icon:"🍎", color:"linear-gradient(135deg,#d95858,#ef9b4b)",
+        title:"Emmas buntes Frühstück", subtitle:"Sağlıklı seçimler ve renkler", minutes:5,
+        intro:"Emma ile renkli bir kahvaltı hazırla; yiyecekleri ve dengeli beslenmeyi öğren.",
+        goals:["Kahvaltılık yiyecekler","Renkler ve tatlar","mögen ve essen fiilleri","Dengeli bir tabak hazırlama"],
+        grammar:"mögen · gern", culture:"Almanya’da kahvaltıda ekmek, peynir, yoğurt, müsli ve meyve sık görülür. Her aile farklı şeyler tercih eder.",
+        paragraphs:[
+          {de:"Emma hat am Morgen großen Hunger. Auf dem Tisch stehen Schokolade, Brot, Käse, Joghurt, eine Banane und ein Apfel. Emma möchte zuerst nur Schokolade essen.",tr:"Emma sabah çok aç. Masada çikolata, ekmek, peynir, yoğurt, bir muz ve bir elma var. Emma önce sadece çikolata yemek istiyor."},
+          {de:"Ihr Vater sagt: Dein Körper braucht verschiedene Lebensmittel. Wir machen einen bunten Teller. Emma legt gelbe Banane, roten Apfel, weißes Joghurt und braunes Brot auf den Teller.",tr:"Babası şöyle diyor: Vücudunun farklı gıdalara ihtiyacı var. Renkli bir tabak yapalım. Emma tabağa sarı muz, kırmızı elma, beyaz yoğurt ve kahverengi ekmek koyuyor."},
+          {de:"Emma probiert alles. Der Apfel ist süß und frisch. Das Brot mit Käse schmeckt gut. Sie trinkt auch ein Glas Wasser. Die Schokolade bleibt als kleines Stück auf dem Teller.",tr:"Emma her şeyi tadıyor. Elma tatlı ve taze. Peynirli ekmeğin tadı güzel. Bir bardak su da içiyor. Çikolata küçük bir parça olarak tabakta kalıyor."},
+          {de:"Nach dem Frühstück hat Emma neue Energie. Sie packt einen Apfel und Wasser für die Schule ein. Jetzt weiß sie: Ein buntes Frühstück ist lecker und gibt dem Körper Kraft.",tr:"Kahvaltıdan sonra Emma’nın yeni enerjisi var. Okul için bir elma ve su hazırlıyor. Artık biliyor: Renkli bir kahvaltı lezzetlidir ve vücuda güç verir."}
+        ],
+        vocab:[
+          {lemma:"der Hunger",display:"der Hunger",forms:["hunger"],meaning:"açlık",type:"İsim",example:"Ich habe Hunger.",exampleTr:"Açım."},
+          {lemma:"das Frühstück",display:"das Frühstück",forms:["frühstück"],meaning:"kahvaltı",type:"İsim",plural:"die Frühstücke",example:"Das Frühstück ist bunt.",exampleTr:"Kahvaltı renkli."},
+          {lemma:"der Käse",display:"der Käse",forms:["käse"],meaning:"peynir",type:"İsim",example:"Ich esse Brot mit Käse.",exampleTr:"Peynirli ekmek yiyorum."},
+          {lemma:"der Joghurt",display:"der Joghurt",forms:["joghurt"],meaning:"yoğurt",type:"İsim",plural:"die Joghurts",example:"Der Joghurt ist weiß.",exampleTr:"Yoğurt beyaz."},
+          {lemma:"der Körper",display:"der Körper",forms:["körper"],meaning:"vücut",type:"İsim",plural:"die Körper",example:"Wasser ist gut für den Körper.",exampleTr:"Su vücut için iyidir."},
+          {lemma:"verschieden",display:"verschieden",forms:["verschiedene"],meaning:"farklı, çeşitli",type:"Sıfat",example:"Wir essen verschiedene Lebensmittel.",exampleTr:"Çeşitli gıdalar yiyoruz."},
+          {lemma:"der Teller",display:"der Teller",forms:["teller"],meaning:"tabak",type:"İsim",plural:"die Teller",example:"Das Essen ist auf dem Teller.",exampleTr:"Yemek tabakta."},
+          {lemma:"probieren",display:"probieren",forms:["probiert"],meaning:"tatmak, denemek",type:"Fiil",example:"Emma probiert den Apfel.",exampleTr:"Emma elmayı tadıyor."},
+          {lemma:"frisch",display:"frisch",forms:["frisch"],meaning:"taze",type:"Sıfat",example:"Der Apfel ist frisch.",exampleTr:"Elma taze."},
+          {lemma:"schmecken",display:"schmecken",forms:["schmeckt"],meaning:"tadı olmak",type:"Fiil",example:"Das Brot schmeckt gut.",exampleTr:"Ekmeğin tadı güzel."},
+          {lemma:"die Energie",display:"die Energie",forms:["energie"],meaning:"enerji",type:"İsim",example:"Das Frühstück gibt Energie.",exampleTr:"Kahvaltı enerji verir."},
+          {lemma:"die Kraft",display:"die Kraft",forms:["kraft"],meaning:"güç",type:"İsim",plural:"die Kräfte",example:"Essen gibt dem Körper Kraft.",exampleTr:"Yemek vücuda güç verir."}
+        ],
+        quiz:[
+          {q:"Emma sabah nasıl hissediyor?",options:["Tok","Aç","Yorgun","Üzgün"],answer:1,explain:"Emma hat großen Hunger."},
+          {q:"Emma önce yalnızca ne yemek istiyor?",options:["Elma","Ekmek","Çikolata","Yoğurt"],answer:2,explain:"Sie möchte zuerst nur Schokolade essen."},
+          {q:"Babası ne hazırlamayı öneriyor?",options:["Büyük pasta","Renkli bir tabak","Sıcak çorba","Sandviç"],answer:1,explain:"Wir machen einen bunten Teller."},
+          {q:"Muz hangi renktir?",options:["Kırmızı","Beyaz","Sarı","Kahverengi"],answer:2,explain:"Emma legt gelbe Banane auf den Teller."},
+          {q:"Emma ne içiyor?",options:["Süt","Meyve suyu","Çay","Su"],answer:3,explain:"Sie trinkt ein Glas Wasser."},
+          {q:"Çikolatanın ne kadarı tabakta kalıyor?",options:["Küçük bir parça","Tamamı","Hiçbiri","İki paket"],answer:0,explain:"Die Schokolade bleibt als kleines Stück."},
+          {q:"“frisch” ne demektir?",options:["Bayat","Taze","Tatlı","Koyu"],answer:1,explain:"frisch = taze."},
+          {q:"Emma okul için ne hazırlıyor?",options:["Çikolata ve süt","Elma ve su","Peynir ve çay","Muz ve kek"],answer:1,explain:"Sie packt einen Apfel und Wasser ein."},
+          {q:"Renkli kahvaltı vücuda ne verir?",options:["Soğuk","Güç","Uyku","Yağmur"],answer:1,explain:"Es gibt dem Körper Kraft."},
+          {q:"Hikâyenin temel mesajı nedir?",options:["Sadece tatlı yemek","Kahvaltı yapmamak","Çeşitli ve dengeli beslenmek","Her şeyi aynı renkte seçmek"],answer:2,explain:"Farklı besinlerden oluşan dengeli tabak anlatılıyor."}
+        ]
+      }
+    ];
+
+    var COMMON = {
+      "ich":["ich","ben","Zamir"],"du":["du","sen","Zamir"],"er":["er","o (erkek)","Zamir"],"sie":["sie","o (kadın) / onlar","Zamir"],"es":["es","o","Zamir"],"wir":["wir","biz","Zamir"],"ihr":["ihr","siz / onun","Zamir"],
+      "der":["der","belirli artikel (eril)","Artikel"],"die":["die","belirli artikel (dişil/çoğul)","Artikel"],"das":["das","belirli artikel (nötr)","Artikel"],"ein":["ein","bir (eril/nötr)","Artikel"],"eine":["eine","bir (dişil)","Artikel"],
+      "und":["und","ve","Bağlaç"],"aber":["aber","ama","Bağlaç"],"oder":["oder","veya","Bağlaç"],"auch":["auch","de/da, ayrıca","Zarf"],"nicht":["nicht","değil","Olumsuzluk"],"nur":["nur","sadece","Zarf"],
+      "in":["in","içinde, -de/-da","Edat"],"im":["im","içinde (in dem)","Edat"],"am":["am","-de/-da (an dem)","Edat"],"an":["an","yanında, üzerinde","Edat"],"auf":["auf","üzerinde","Edat"],"mit":["mit","ile","Edat"],"nach":["nach","-e doğru / sonra","Edat"],"aus":["aus","-den/-dan","Edat"],"zum":["zum","-e/-a (zu dem)","Edat"],"zur":["zur","-e/-a (zu der)","Edat"],"über":["über","üzerinde, hakkında","Edat"],"neben":["neben","yanında","Edat"],"für":["für","için","Edat"],
+      "ist":["sein","olmak","Fiil"],"sind":["sein","olmak","Fiil"],"bin":["sein","olmak","Fiil"],"hat":["haben","sahip olmak","Fiil"],"habe":["haben","sahip olmak","Fiil"],"haben":["haben","sahip olmak","Fiil"],
+      "geht":["gehen","gitmek","Fiil"],"gehen":["gehen","gitmek","Fiil"],"kommt":["kommen","gelmek","Fiil"],"komme":["kommen","gelmek","Fiil"],"fahren":["fahren","araçla gitmek","Fiil"],"fährt":["fahren","araçla gitmek","Fiil"],
+      "sagt":["sagen","söylemek","Fiil"],"sagen":["sagen","söylemek","Fiil"],"macht":["machen","yapmak","Fiil"],"machen":["machen","yapmak","Fiil"],"nimmt":["nehmen","almak","Fiil"],"nehmen":["nehmen","almak","Fiil"],"findet":["finden","bulmak","Fiil"],"sehen":["sehen","görmek","Fiil"],"sieht":["sehen","görmek","Fiil"],
+      "heute":["heute","bugün","Zarf"],"morgen":["morgen","yarın / sabah","Zarf"],"jetzt":["jetzt","şimdi","Zarf"],"dann":["dann","sonra","Zarf"],"zuerst":["zuerst","önce","Zarf"],"später":["später","daha sonra","Zarf"],"wieder":["wieder","yeniden","Zarf"],"bald":["bald","yakında","Zarf"],
+      "groß":["groß","büyük","Sıfat"],"große":["groß","büyük","Sıfat"],"klein":["klein","küçük","Sıfat"],"kleine":["klein","küçük","Sıfat"],"kleinen":["klein","küçük","Sıfat"],"neu":["neu","yeni","Sıfat"],"neuen":["neu","yeni","Sıfat"],"gut":["gut","iyi","Sıfat"],"glücklich":["glücklich","mutlu","Sıfat"],"müde":["müde","yorgun","Sıfat"],
+      "eins":["eins","bir","Sayı"],"zwei":["zwei","iki","Sayı"],"drei":["drei","üç","Sayı"],"vier":["vier","dört","Sayı"],"fünf":["fünf","beş","Sayı"],"zehn":["zehn","on","Sayı"],"zwölf":["zwölf","on iki","Sayı"],
+      "rot":["rot","kırmızı","Renk"],"roten":["rot","kırmızı","Renk"],"blau":["blau","mavi","Renk"],"grün":["grün","yeşil","Renk"],"grünen":["grün","yeşil","Renk"],"gelbe":["gelb","sarı","Renk"],"weiß":["weiß","beyaz","Renk"],"weiße":["weiß","beyaz","Renk"],"braunes":["braun","kahverengi","Renk"],
+      "wer":["wer","kim","Soru"],"wie":["wie","nasıl","Soru"],"wo":["wo","nerede","Soru"],"was":["was","ne","Soru"],"warum":["warum","neden","Soru"],"wann":["wann","ne zaman","Soru"],
+      "hallo":["Hallo","merhaba","İfade"],"danke":["Danke","teşekkürler","İfade"],"bitte":["Bitte","lütfen / rica ederim","İfade"],"entschuldigung":["Entschuldigung","affedersiniz","İfade"],"ja":["ja","evet","İfade"],"nein":["nein","hayır","İfade"]
+    };
+
+    var DEFAULT_STATE = {
+      profile:null, xp:0, dailyXp:0, dailyDate:"", streak:0, lastVisit:"",
+      completed:{}, quizBest:{}, perfect:{}, words:{}, errors:[], correctAnswers:0,
+      currentStory:null, mode:"learn", rate:1
+    };
+    var state = loadState();
+    var currentStory = null;
+    var currentQuiz = null;
+    var quizIndex = 0;
+    var quizSelected = null;
+    var quizAnswered = false;
+    var quizCorrect = 0;
+    var quizReturn = "reader";
+    var wordIndex = {};
+    var activeWord = null;
+    var activeWordFilter = "all";
+    var activeTopic = "Tümü";
+    var reviewQueue = [];
+    var reviewIndex = 0;
+    var toastTimer = null;
+
+    function cloneDefault(){ return JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+    function loadState(){
+      try{
+        var saved = JSON.parse(localStorage.getItem("lesewelt-state-v1"));
+        return Object.assign(cloneDefault(),saved || {});
+      }catch(e){ return cloneDefault(); }
+    }
+    function saveState(){ localStorage.setItem("lesewelt-state-v1",JSON.stringify(state)); }
+    function isoDay(date){ return date.toISOString().slice(0,10); }
+    function daysBetween(a,b){
+      if(!a || !b) return 999;
+      return Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/86400000);
+    }
+    function updateVisit(){
+      var today=isoDay(new Date());
+      if(state.dailyDate!==today){ state.dailyDate=today;state.dailyXp=0; }
+      if(state.lastVisit!==today){
+        var gap=daysBetween(state.lastVisit,today);
+        state.streak=gap===1?state.streak+1:1;
+        state.lastVisit=today;
+      }
+      saveState();
+    }
+    function addXp(amount,message){
+      state.xp+=amount; state.dailyXp+=amount; saveState(); updateHeader();
+      if(message) toast("+"+amount+" XP · "+message);
+    }
+    function escapeHtml(value){
+      return String(value).replace(/[&<>"']/g,function(c){return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"})[c];});
+    }
+    function normalizeWord(value){ return String(value).toLocaleLowerCase("de-DE").replace(/[^a-zäöüß-]/g,""); }
+    function makeId(value){ return normalizeWord(value).replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss"); }
+
+    function buildWordIndex(story){
+      wordIndex={};
+      Object.keys(COMMON).forEach(function(form){
+        var data=COMMON[form];
+        wordIndex[form]={lemma:data[0],display:data[0],meaning:data[1],type:data[2],forms:[form],example:"",exampleTr:""};
+      });
+      story.vocab.forEach(function(v){
+        var keys=(v.forms||[]).concat([v.lemma,v.display]);
+        keys.forEach(function(key){ wordIndex[normalizeWord(key)]=v; });
+      });
+    }
+    function resolveWord(token){
+      var key=normalizeWord(token);
+      if(wordIndex[key]) return wordIndex[key];
+      if(key.endsWith("en") && wordIndex[key.slice(0,-2)]) return wordIndex[key.slice(0,-2)];
+      return {lemma:token,display:token,meaning:"Bu kelimenin ayrıntılı açıklaması henüz eklenmedi.",type:"Metindeki kelime",forms:[key],example:"",exampleTr:""};
+    }
+    function storedKey(word){ return makeId(word.lemma || word.display); }
+    function isSaved(word){ return Boolean(state.words[storedKey(word)]); }
+
+    function showScreen(name){
+      document.querySelectorAll(".screen").forEach(function(el){el.classList.add("hidden");});
+      var target=document.getElementById(name);
+      if(target){ target.classList.remove("hidden"); window.scrollTo(0,0); }
+      document.querySelectorAll("[data-go]").forEach(function(btn){ btn.classList.toggle("active",btn.getAttribute("data-go")===name); });
+      if(name==="library") renderLibrary();
+      if(name==="words") renderWords();
+      if(name==="progress") renderProgress();
+    }
+    function setAppVisible(visible){
+      document.getElementById("appHeader").classList.toggle("hidden",!visible);
+      document.getElementById("mobileNav").classList.toggle("hidden",!visible);
+    }
+    function updateHeader(){
+      document.getElementById("headerXp").textContent=state.xp;
+      document.getElementById("headerStreak").textContent=state.streak;
+    }
+    function toast(message){
+      var el=document.getElementById("toast");
+      el.textContent=message; el.classList.add("show");
+      clearTimeout(toastTimer); toastTimer=setTimeout(function(){el.classList.remove("show");},2600);
+    }
+
+    function setupOnboarding(){
+      var selectedAudience=state.profile?state.profile.audience:null;
+      var selectedLevel=state.profile?state.profile.level:null;
+      document.querySelectorAll("[data-audience]").forEach(function(btn){
+        btn.addEventListener("click",function(){
+          selectedAudience=btn.getAttribute("data-audience");
+          document.querySelectorAll("[data-audience]").forEach(function(x){x.classList.toggle("selected",x===btn);});
+          document.getElementById("toLevel").disabled=false;
+        });
+      });
+      document.getElementById("toLevel").addEventListener("click",function(){
+        document.getElementById("audienceStep").classList.add("hidden");
+        document.getElementById("levelStep").classList.remove("hidden");
+      });
+      document.getElementById("backAudience").addEventListener("click",function(){
+        document.getElementById("levelStep").classList.add("hidden");
+        document.getElementById("audienceStep").classList.remove("hidden");
+      });
+      document.querySelectorAll("[data-level]").forEach(function(btn){
+        btn.addEventListener("click",function(){
+          selectedLevel=btn.getAttribute("data-level");
+          document.querySelectorAll("[data-level]").forEach(function(x){x.classList.toggle("selected",x===btn);});
+          document.getElementById("startLearning").disabled=false;
+        });
+      });
+      document.getElementById("startLearning").addEventListener("click",function(){
+        state.profile={audience:selectedAudience,level:selectedLevel};
+        state.mode=selectedLevel==="Starter"?"comfort":"learn";
+        saveState(); setAppVisible(true); updateVisit(); updateHeader(); showScreen("library");
+      });
+    }
+
+    function profileStories(){ return STORIES.filter(function(s){return s.audience===state.profile.audience;}); }
+    function nextStory(){
+      var list=profileStories();
+      return list.find(function(s){return !state.completed[s.id];}) || list[0];
+    }
+    function renderLibrary(){
+      if(!state.profile) return;
+      updateVisit(); updateHeader();
+      var isChild=state.profile.audience==="child";
+      var name=isChild?"Küçük okur":"Yeni bir okur";
+      var completeCount=profileStories().filter(function(s){return state.completed[s.id];}).length;
+      document.getElementById("welcomeTitle").textContent=completeCount?("Harika gidiyorsun, "+name+"!"):("Hoş geldin, "+name+"!");
+      document.getElementById("welcomeText").textContent=completeCount?("A1 yolunda "+completeCount+" kitabı tamamladın. Kaldığın yerden devam edebilirsin."):"İlk kitabın hazır. Kelimelere dokunmayı ve cümleleri dinlemeyi unutma.";
+      document.getElementById("libraryHeading").textContent=isChild?"Çocuk hikâyeleri":"Yetişkin hikâyeleri";
+      var recommended=nextStory();
+      var continueBtn=document.getElementById("continueBtn");
+      continueBtn.textContent=(state.completed[recommended.id]?"Yeniden oku: ":"Önerilen: ")+recommended.title+" →";
+      continueBtn.onclick=function(){openStory(recommended.id);};
+      var daily=Math.min(100,Math.round(state.dailyXp/60*100));
+      document.getElementById("dailyRing").style.setProperty("--daily-progress",daily+"%");
+      document.getElementById("dailyPercent").textContent=daily+"%";
+      document.getElementById("dailyFill").style.width=daily+"%";
+      document.getElementById("dailyXpText").textContent=Math.min(state.dailyXp,60)+" / 60 XP";
+      document.getElementById("dailyMessage").textContent=state.dailyXp>=60?"Günlük hedef tamamlandı!":"Bugün 60 XP kazan";
+      renderPath();
+      renderTopicFilters();
+      renderBooks();
+    }
+    function renderPath(){
+      var container=document.getElementById("learningPath");
+      var names=state.profile.audience==="child"?["Tanışma","Doğa","Keşif","Sağlıklı yaşam"]:["Tanışma","Alışveriş","Ulaşım","İş hayatı"];
+      container.innerHTML=names.map(function(name,index){
+        var story=profileStories().find(function(s){return s.unit===index+1;});
+        var done=story&&state.completed[story.id];
+        var step='<div class="path-step '+(done?"done":"")+'"><span class="path-number">'+(done?"✓":index+1)+'</span><div><small class="muted">Ünite '+(index+1)+'</small><strong style="display:block">'+escapeHtml(name)+'</strong></div></div>';
+        return step+(index<names.length-1?'<span class="path-arrow">→</span>':"");
+      }).join("");
+    }
+    function renderTopicFilters(){
+      var topics=["Tümü"].concat(profileStories().map(function(s){return s.topic;}));
+      document.getElementById("topicFilters").innerHTML=topics.map(function(t){
+        return '<button class="filter-btn '+(activeTopic===t?"active":"")+'" data-topic="'+escapeHtml(t)+'">'+escapeHtml(t)+'</button>';
+      }).join("");
+      document.querySelectorAll("[data-topic]").forEach(function(btn){
+        btn.onclick=function(){activeTopic=btn.getAttribute("data-topic");renderTopicFilters();renderBooks();};
+      });
+    }
+    function renderBooks(){
+      var books=profileStories().filter(function(s){return activeTopic==="Tümü"||s.topic===activeTopic;});
+      document.getElementById("bookGrid").innerHTML=books.map(function(s){
+        var done=Boolean(state.completed[s.id]);
+        var best=state.quizBest[s.id];
+        return '<article class="book-card card">'+
+          '<div class="book-cover" style="background:'+s.color+'"><span class="cover-icon">'+s.icon+'</span><div><div class="cover-label">Ünite '+s.unit+' · '+escapeHtml(s.topic)+'</div><h3>'+escapeHtml(s.title)+'</h3></div></div>'+
+          '<div class="book-body"><div class="meta-row"><span class="tag">A1</span><span class="tag">⏱ '+s.minutes+' dk.</span><span class="tag">🔊 Sesli</span><span class="tag">'+s.vocab.length+' kelime</span></div>'+
+          '<p>'+escapeHtml(s.intro)+'</p><div class="book-footer"><span class="book-status">'+(done?"✓ Tamamlandı"+(best!==undefined?" · "+best+"/10":""):"Yeni kitap")+'</span>'+
+          '<button class="btn '+(done?"btn-secondary":"btn-primary")+'" data-open-story="'+s.id+'">'+(done?"Yeniden oku":"Kitabı aç")+'</button></div></div></article>';
+      }).join("");
+      document.querySelectorAll("[data-open-story]").forEach(function(btn){btn.onclick=function(){openStory(btn.getAttribute("data-open-story"));};});
+    }
+
+    function openStory(id){
+      stopSpeaking();
+      currentStory=STORIES.find(function(s){return s.id===id;});
+      if(!currentStory) return;
+      state.currentStory=id; saveState(); buildWordIndex(currentStory);
+      document.getElementById("readerKicker").textContent="Ünite "+currentStory.unit+" · A1 · "+currentStory.minutes+" dakika";
+      document.getElementById("readerTitle").textContent=currentStory.title;
+      document.getElementById("readerIntro").textContent=currentStory.intro;
+      document.getElementById("readerGoals").innerHTML=currentStory.goals.map(function(g){return "<li>"+escapeHtml(g)+"</li>";}).join("");
+      document.getElementById("cultureNote").textContent=currentStory.culture;
+      document.getElementById("prepWords").innerHTML=currentStory.vocab.slice(0,8).map(function(v){
+        return '<button class="prep-word" data-prep="'+storedKey(v)+'"><strong>'+escapeHtml(v.display)+'</strong><br>'+escapeHtml(v.meaning)+'</button>';
+      }).join("");
+      renderStoryText();
+      document.querySelectorAll("[data-prep]").forEach(function(btn){
+        btn.onclick=function(){
+          var item=currentStory.vocab.find(function(v){return storedKey(v)===btn.getAttribute("data-prep");});
+          openWord(item);
+        };
+      });
+      document.getElementById("readerXp").textContent=state.completed[id]?"✓ Daha önce tamamlandı":"+50 XP · Kitabı bitir";
+      applyReaderMode(state.mode||"learn");
+      showScreen("reader");
+    }
+    function renderStoryText(){
+      var container=document.getElementById("storyText");
+      container.innerHTML=currentStory.paragraphs.map(function(p,index){
+        return '<div class="story-paragraph" data-paragraph="'+index+'"><button class="paragraph-audio" data-speak-paragraph="'+index+'" aria-label="Paragrafı dinle">🔊</button>'+
+          '<div>'+tokenizeText(p.de,p.tr)+'</div><div class="translation hidden">'+escapeHtml(p.tr)+'</div></div>';
+      }).join("");
+      document.querySelectorAll(".word").forEach(function(btn){
+        btn.onclick=function(){
+          if(state.mode==="exam") return;
+          openWord(resolveWord(btn.textContent));
+        };
+      });
+      document.querySelectorAll("[data-speak-paragraph]").forEach(function(btn){
+        btn.onclick=function(){speakParagraph(Number(btn.getAttribute("data-speak-paragraph")));};
+      });
+      refreshSavedHighlights();
+    }
+    function tokenizeText(text,translation){
+      var parts=text.split(/([A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß]+)?)/g);
+      return parts.map(function(part){
+        if(!/^[A-Za-zÄÖÜäöüß]/.test(part)) return escapeHtml(part);
+        var word=resolveWord(part);
+        return '<button class="word '+(isSaved(word)?"saved":"")+'" type="button" title="Anlamı gör ve kaydet" data-token="'+escapeHtml(normalizeWord(part))+'">'+escapeHtml(part)+'</button>';
+      }).join("");
+    }
+    function refreshSavedHighlights(){
+      document.querySelectorAll(".word").forEach(function(btn){
+        btn.classList.toggle("saved",isSaved(resolveWord(btn.textContent)));
+      });
+    }
+    function applyReaderMode(mode){
+      state.mode=mode; saveState();
+      document.querySelectorAll("[data-mode]").forEach(function(btn){btn.classList.toggle("active",btn.getAttribute("data-mode")===mode);});
+      document.getElementById("storyText").classList.toggle("exam-mode",mode==="exam");
+      var show=mode==="comfort";
+      document.querySelectorAll(".translation").forEach(function(el){el.classList.toggle("hidden",!show);});
+      document.getElementById("toggleTranslation").textContent=show?"Çeviriyi gizle":"Çeviriyi göster";
+      document.getElementById("toggleTranslation").disabled=mode==="exam";
+    }
+    function toggleTranslations(){
+      if(state.mode==="exam") return;
+      var anyHidden=Array.from(document.querySelectorAll(".translation")).some(function(el){return el.classList.contains("hidden");});
+      document.querySelectorAll(".translation").forEach(function(el){el.classList.toggle("hidden",!anyHidden);});
+      document.getElementById("toggleTranslation").textContent=anyHidden?"Çeviriyi gizle":"Çeviriyi göster";
+    }
+
+    function speak(text,onstart,onend){
+      if(!("speechSynthesis" in window)){toast("Bu tarayıcı sesli okumayı desteklemiyor.");return;}
+      stopSpeaking();
+      var u=new SpeechSynthesisUtterance(text);
+      u.lang="de-DE";u.rate=Number(state.rate)||1;u.pitch=1;
+      var voices=window.speechSynthesis.getVoices();
+      var german=voices.find(function(v){return /^de[-_]/i.test(v.lang);});
+      if(german) u.voice=german;
+      u.onstart=onstart||null;u.onend=onend||null;u.onerror=onend||null;
+      window.speechSynthesis.speak(u);
+    }
+    function stopSpeaking(){
+      if("speechSynthesis" in window) window.speechSynthesis.cancel();
+      document.querySelectorAll(".story-paragraph").forEach(function(el){el.classList.remove("speaking");});
+      var b=document.getElementById("listenAll");if(b)b.textContent="🔊 Tümünü dinle";
+    }
+    function speakParagraph(index){
+      var el=document.querySelector('[data-paragraph="'+index+'"]');
+      speak(currentStory.paragraphs[index].de,function(){el.classList.add("speaking");},function(){el.classList.remove("speaking");});
+    }
+    function speakAll(){
+      var btn=document.getElementById("listenAll");
+      if(window.speechSynthesis&&window.speechSynthesis.speaking){stopSpeaking();return;}
+      speak(currentStory.paragraphs.map(function(p){return p.de;}).join(" "),function(){btn.textContent="■ Durdur";},function(){btn.textContent="🔊 Tümünü dinle";});
+    }
+
+    function openWord(word){
+      activeWord=word;
+      document.getElementById("dialogWord").textContent=word.display||word.lemma;
+      document.getElementById("dialogMeaning").textContent=word.meaning;
+      var article=(word.display||"").split(" ")[0];
+      var articleText=/^(der|die|das)$/.test(article)?article:"—";
+      document.getElementById("dialogData").innerHTML='<div><small>Tür</small><strong>'+escapeHtml(word.type||"Kelime")+'</strong></div>'+
+        '<div><small>Artikel</small><strong>'+escapeHtml(articleText)+'</strong></div>'+
+        '<div><small>Çoğul</small><strong>'+escapeHtml(word.plural||"—")+'</strong></div>'+
+        '<div><small>Seviye</small><strong>A1</strong></div>';
+      document.getElementById("dialogExample").innerHTML=word.example?('<strong>'+escapeHtml(word.example)+'</strong><br><span class="muted">'+escapeHtml(word.exampleTr||"")+'</span>'):"Bu kelimeyi geçtiği cümleyle birlikte kaydedebilirsin.";
+      var saved=isSaved(word);
+      document.getElementById("saveWord").textContent=saved?"✓ Kelimelerimde":"⭐ Kelimelerime ekle";
+      document.getElementById("saveWord").className="btn "+(saved?"btn-soft":"btn-primary");
+      document.getElementById("wordDialog").showModal();
+    }
+    function toggleSaveActiveWord(){
+      if(!activeWord)return;
+      var key=storedKey(activeWord);
+      if(state.words[key]){
+        delete state.words[key];toast("Kelime listeden çıkarıldı.");
+      }else{
+        state.words[key]={word:activeWord,source:currentStory?currentStory.id:"",status:"new",strength:0,due:isoDay(new Date()),addedAt:new Date().toISOString()};
+        toast("Kelime defterine eklendi.");
+      }
+      saveState();refreshSavedHighlights();document.getElementById("wordDialog").close();
+    }
+
+    function finishStory(){
+      if(!state.completed[currentStory.id]){
+        state.completed[currentStory.id]=new Date().toISOString(); saveState(); addXp(50,"Kitap tamamlandı");
+      }
+      startQuiz(currentStory);
+    }
+    function startQuiz(story){
+      stopSpeaking();currentQuiz=story;quizIndex=0;quizSelected=null;quizAnswered=false;quizCorrect=0;
+      quizReturn="reader";
+      document.getElementById("quizLiveXp").textContent="0";
+      renderQuizQuestion();showScreen("quiz");
+    }
+    function renderQuizQuestion(){
+      var q=currentQuiz.quiz[quizIndex];
+      document.getElementById("quizCard").innerHTML='<div class="quiz-counter">Soru '+(quizIndex+1)+' / '+currentQuiz.quiz.length+'</div>'+
+        '<div class="progress-track"><div class="progress-fill" style="width:'+((quizIndex)/currentQuiz.quiz.length*100)+'%"></div></div>'+
+        '<h2 class="question">'+escapeHtml(q.q)+'</h2><div class="answer-list">'+
+        q.options.map(function(option,index){return '<button class="answer" data-answer="'+index+'"><span style="color:var(--muted);margin-right:8px">'+String.fromCharCode(65+index)+'.</span>'+escapeHtml(option)+'</button>';}).join("")+
+        '</div><div id="quizFeedback"></div><div class="quiz-actions"><button class="btn btn-primary" id="quizAction" disabled>Cevabı kontrol et</button></div>';
+      document.querySelectorAll("[data-answer]").forEach(function(btn){
+        btn.onclick=function(){
+          if(quizAnswered)return;
+          quizSelected=Number(btn.getAttribute("data-answer"));
+          document.querySelectorAll("[data-answer]").forEach(function(x){x.classList.toggle("selected",x===btn);});
+          document.getElementById("quizAction").disabled=false;
+        };
+      });
+      document.getElementById("quizAction").onclick=checkQuizAnswer;
+    }
+    function checkQuizAnswer(){
+      var q=currentQuiz.quiz[quizIndex];
+      if(!quizAnswered){
+        quizAnswered=true;
+        var correct=quizSelected===q.answer;
+        if(correct)quizCorrect++;
+        document.querySelectorAll("[data-answer]").forEach(function(btn){
+          var value=Number(btn.getAttribute("data-answer"));
+          btn.disabled=true;
+          if(value===q.answer)btn.classList.add("correct");
+          if(value===quizSelected&&!correct)btn.classList.add("wrong");
+        });
+        var feedback=document.getElementById("quizFeedback");
+        feedback.className="feedback "+(correct?"good":"bad");
+        feedback.innerHTML="<strong>"+(correct?"Doğru!":"Doğru cevap: "+escapeHtml(q.options[q.answer]))+"</strong><br>"+escapeHtml(q.explain);
+        if(!correct){
+          state.errors.unshift({storyId:currentQuiz.id,q:q.q,correct:q.options[q.answer],chosen:q.options[quizSelected],date:new Date().toISOString()});
+          state.errors=state.errors.slice(0,12);saveState();
+        }
+        document.getElementById("quizLiveXp").textContent=quizCorrect*10;
+        var action=document.getElementById("quizAction");
+        action.textContent=quizIndex===currentQuiz.quiz.length-1?"Sonucu gör":"Sonraki soru →";
+        action.disabled=false;
+      }else{
+        quizIndex++;
+        if(quizIndex>=currentQuiz.quiz.length)finishQuiz();else{quizSelected=null;quizAnswered=false;renderQuizQuestion();}
+      }
+    }
+    function finishQuiz(){
+      var oldBest=state.quizBest[currentQuiz.id]||0;
+      var improvement=Math.max(0,quizCorrect-oldBest);
+      var reward=improvement*10;
+      state.quizBest[currentQuiz.id]=Math.max(oldBest,quizCorrect);
+      state.correctAnswers+=quizCorrect;
+      if(quizCorrect===currentQuiz.quiz.length&&!state.perfect[currentQuiz.id]){state.perfect[currentQuiz.id]=true;reward+=50;}
+      saveState();if(reward)addXp(reward,quizCorrect===10?"Kusursuz quiz bonusu":"Quiz başarısı");
+      var percent=Math.round(quizCorrect/currentQuiz.quiz.length*100);
+      var message=percent===100?"Mükemmel! Kitabın bütün ayrıntılarını yakaladın.":percent>=70?"Çok iyi! Yanlışlarını hata defterinden tekrar edebilirsin.":"İyi bir başlangıç. Kitabı dinleyerek yeniden okumayı dene.";
+      document.getElementById("quizCard").innerHTML='<div class="result-card"><div class="eyebrow">Quiz tamamlandı</div><h2>'+escapeHtml(currentQuiz.title)+'</h2>'+
+        '<div class="result-score"><div><strong>'+quizCorrect+'/'+currentQuiz.quiz.length+'</strong><small>doğru</small></div></div><p>'+message+'</p>'+
+        '<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin-top:24px"><button class="btn btn-secondary" id="retryQuiz">Tekrar çöz</button><button class="btn btn-primary" id="nextBook">'+(quizReturn==="words"?"Kelimelerime dön →":"Kitaplığa dön →")+'</button></div></div>';
+      var resultReturn=quizReturn;
+      document.getElementById("retryQuiz").onclick=function(){
+        quizIndex=0;quizSelected=null;quizAnswered=false;quizCorrect=0;quizReturn=resultReturn;
+        document.getElementById("quizLiveXp").textContent="0";renderQuizQuestion();showScreen("quiz");
+      };
+      document.getElementById("nextBook").onclick=function(){showScreen(quizReturn==="words"?"words":"library");};
+    }
+
+    function renderWords(){
+      var entries=Object.keys(state.words).map(function(key){return {key:key,data:state.words[key]};});
+      var today=isoDay(new Date());
+      document.getElementById("wordTotal").textContent=entries.length;
+      document.getElementById("wordDue").textContent=entries.filter(function(x){return !x.data.due||x.data.due<=today;}).length;
+      document.getElementById("wordLearning").textContent=entries.filter(function(x){return x.data.status==="learning";}).length;
+      document.getElementById("wordKnown").textContent=entries.filter(function(x){return x.data.status==="known";}).length;
+      var filtered=entries.filter(function(x){return activeWordFilter==="all"||x.data.status===activeWordFilter;});
+      document.getElementById("wordList").innerHTML=filtered.length?filtered.map(function(entry){
+        var w=entry.data.word;
+        var first=(w.display||w.lemma).split(" ")[0];
+        var article=/^(der|die|das)$/.test(first)?first:"A1";
+        return '<article class="word-row card"><div class="word-main"><span class="article-badge">'+escapeHtml(article)+'</span><div><strong>'+escapeHtml(w.display||w.lemma)+'</strong><small>'+escapeHtml(w.meaning)+'</small></div></div>'+
+          '<select class="status-select" data-status-key="'+entry.key+'" aria-label="Kelime durumu"><option value="new" '+(entry.data.status==="new"?"selected":"")+'>Yeni</option><option value="learning" '+(entry.data.status==="learning"?"selected":"")+'>Öğreniyorum</option><option value="known" '+(entry.data.status==="known"?"selected":"")+'>Öğrendim</option><option value="remove">Listeden çıkar</option></select></article>';
+      }).join(""):'<div class="empty-state card"><div class="big-icon">⭐</div><h3>Henüz burada kelime yok</h3><p class="muted">Bir kitap aç ve Almanca kelimelere dokunarak kendi sözlüğünü oluştur.</p><button class="btn btn-primary" data-go="library">Kitaplara git</button></div>';
+      document.querySelectorAll("[data-status-key]").forEach(function(select){
+        select.onchange=function(){
+          var key=select.getAttribute("data-status-key");
+          if(select.value==="remove")delete state.words[key];
+          else state.words[key].status=select.value;
+          saveState();renderWords();
+        };
+      });
+      document.querySelectorAll("#words [data-go]").forEach(function(btn){btn.onclick=function(){showScreen(btn.getAttribute("data-go"));};});
+      document.querySelectorAll("[data-word-filter]").forEach(function(btn){
+        btn.classList.toggle("active",btn.getAttribute("data-word-filter")===activeWordFilter);
+        btn.onclick=function(){activeWordFilter=btn.getAttribute("data-word-filter");renderWords();};
+      });
+      document.getElementById("startWordQuiz").disabled=entries.length<4;
+      document.getElementById("startWordQuiz").title=entries.length<4?"Quiz için en az 4 kelime kaydet.":"";
+      prepareReview(entries);
+    }
+    function prepareReview(entries){
+      var today=isoDay(new Date());
+      reviewQueue=entries.filter(function(x){return !x.data.due||x.data.due<=today;});
+      if(reviewIndex>=reviewQueue.length)reviewIndex=0;
+      var card=document.getElementById("reviewCard");
+      if(!entries.length){
+        card.innerHTML='<div class="eyebrow">Akıllı tekrar</div><h3>Kelime biriktirmeye başla</h3><p class="muted">Kaydettiğin kelimeler doğru zamanda burada tekrar karşına çıkacak.</p>';
+        return;
+      }
+      if(!reviewQueue.length){
+        card.innerHTML='<div class="eyebrow">Akıllı tekrar</div><h3>Bugünkü tekrarlar tamam!</h3><p class="muted">Yeni kelimeler ekleyebilir veya yarın tekrar gelebilirsin.</p>';
+        return;
+      }
+      var entry=reviewQueue[reviewIndex],w=entry.data.word;
+      card.innerHTML='<div class="eyebrow">Bugünkü tekrar · '+(reviewIndex+1)+'/'+reviewQueue.length+'</div><h3>Kartı çevirmek için dokun</h3>'+
+        '<div class="flashcard" id="flashcard"><div class="front">'+escapeHtml(w.display||w.lemma)+'</div><div class="back hidden">'+escapeHtml(w.meaning)+'</div></div>'+
+        '<div class="review-actions"><button style="background:#fff0f0;color:#a23838" data-review="again">Bilmiyorum</button><button style="background:#fff4d7;color:#876014" data-review="medium">Biraz</button><button style="background:#e8f6ef;color:#126a55" data-review="easy">Biliyorum</button></div>';
+      document.getElementById("flashcard").onclick=function(){document.querySelector("#flashcard .back").classList.toggle("hidden");speak(w.display||w.lemma);};
+      document.querySelectorAll("[data-review]").forEach(function(btn){btn.onclick=function(){rateWord(entry.key,btn.getAttribute("data-review"));};});
+    }
+    function rateWord(key,rating){
+      var item=state.words[key];if(!item)return;
+      var days=rating==="easy"?7:rating==="medium"?3:1;
+      item.strength=Math.max(0,(item.strength||0)+(rating==="easy"?2:rating==="medium"?1:-1));
+      item.status=rating==="easy"&&item.strength>=4?"known":"learning";
+      var due=new Date();due.setDate(due.getDate()+days);item.due=isoDay(due);
+      var rewardKey="review-"+isoDay(new Date())+"-"+key;
+      state.perfect=state.perfect||{};
+      saveState();
+      if(!sessionStorage.getItem(rewardKey)){sessionStorage.setItem(rewardKey,"1");addXp(5,"Kelime tekrarı");}
+      reviewIndex++;renderWords();
+    }
+    function startSavedWordQuiz(){
+      var entries=Object.keys(state.words).map(function(k){return state.words[k].word;});
+      if(entries.length<4)return;
+      var chosen=entries.slice().sort(function(){return Math.random()-.5;}).slice(0,Math.min(10,entries.length));
+      var questions=chosen.map(function(w){
+        var wrong=entries.filter(function(x){return storedKey(x)!==storedKey(w);}).sort(function(){return Math.random()-.5;}).slice(0,3).map(function(x){return x.meaning;});
+        var options=wrong.concat([w.meaning]).sort(function(){return Math.random()-.5;});
+        return {q:"“"+(w.display||w.lemma)+"” ne demektir?",options:options,answer:options.indexOf(w.meaning),explain:(w.display||w.lemma)+" = "+w.meaning};
+      });
+      currentQuiz={id:"saved-words-"+isoDay(new Date()),title:"Kelimelerim Quizi",quiz:questions};
+      quizReturn="words";quizIndex=0;quizSelected=null;quizAnswered=false;quizCorrect=0;renderQuizQuestion();showScreen("quiz");
+    }
+
+    function renderProgress(){
+      var bookCount=Object.keys(state.completed).length;
+      var wordCount=Object.keys(state.words).length;
+      document.getElementById("progressXp").textContent=state.xp;
+      document.getElementById("progressBooks").textContent=bookCount;
+      document.getElementById("progressWords").textContent=wordCount;
+      document.getElementById("progressCorrect").textContent=state.correctAnswers;
+      var badges=[
+        {icon:"📖",name:"İlk Sayfa",desc:"İlk kitabını tamamla",ok:bookCount>=1},
+        {icon:"⭐",name:"100 XP",desc:"100 öğrenme puanı kazan",ok:state.xp>=100},
+        {icon:"🧠",name:"Kelime Avcısı",desc:"10 kelime kaydet",ok:wordCount>=10},
+        {icon:"🎯",name:"Kusursuz",desc:"Bir quizde 10/10 yap",ok:Object.keys(state.perfect).some(function(k){return state.perfect[k]===true;})},
+        {icon:"🔥",name:"Düzenli Okur",desc:"3 günlük seri oluştur",ok:state.streak>=3},
+        {icon:"🏆",name:"A1 Gezgin",desc:"4 kitabı tamamla",ok:bookCount>=4}
+      ];
+      document.getElementById("badgesGrid").innerHTML=badges.map(function(b){
+        return '<article class="badge-card card '+(b.ok?"unlocked":"")+'"><div class="badge-icon">'+b.icon+'</div><div><strong>'+b.name+'</strong><small class="muted" style="display:block">'+(b.ok?"Kazanıldı · ":"")+b.desc+'</small></div></article>';
+      }).join("");
+      document.getElementById("errorList").innerHTML=state.errors.length?state.errors.map(function(e){
+        return '<article class="error-row card"><strong>'+escapeHtml(e.q)+'</strong><p>Senin cevabın: '+escapeHtml(e.chosen||"—")+'</p><small style="color:var(--success);font-weight:800">Doğru: '+escapeHtml(e.correct)+'</small></article>';
+      }).join(""):'<div class="empty-state card"><div class="big-icon">🎯</div><h3>Hata defterin temiz</h3><p class="muted">Quizlerdeki yanlışların, tekrar çalışman için burada görünecek.</p></div>';
+    }
+
+    function bindEvents(){
+      document.querySelectorAll("[data-go]").forEach(function(btn){btn.addEventListener("click",function(){stopSpeaking();showScreen(btn.getAttribute("data-go"));});});
+      document.querySelectorAll("[data-mode]").forEach(function(btn){btn.addEventListener("click",function(){applyReaderMode(btn.getAttribute("data-mode"));});});
+      document.querySelectorAll("[data-rate]").forEach(function(btn){
+        btn.addEventListener("click",function(){
+          state.rate=Number(btn.getAttribute("data-rate"));saveState();
+          document.querySelectorAll("[data-rate]").forEach(function(x){x.classList.toggle("active",x===btn);});
+          toast(state.rate<1?"Yavaş okuma seçildi.":"Normal okuma seçildi.");
+        });
+      });
+      document.getElementById("toggleTranslation").addEventListener("click",toggleTranslations);
+      document.getElementById("listenAll").addEventListener("click",speakAll);
+      document.getElementById("finishStory").addEventListener("click",finishStory);
+      document.getElementById("leaveQuiz").addEventListener("click",function(){if(quizReturn==="words")showScreen("words");else if(currentStory)openStory(currentStory.id);else showScreen("library");});
+      document.getElementById("closeWordDialog").addEventListener("click",function(){document.getElementById("wordDialog").close();});
+      document.getElementById("saveWord").addEventListener("click",toggleSaveActiveWord);
+      document.getElementById("speakWord").addEventListener("click",function(){if(activeWord)speak(activeWord.display||activeWord.lemma);});
+      document.getElementById("startWordQuiz").addEventListener("click",startSavedWordQuiz);
+      document.getElementById("changeProfile").addEventListener("click",function(){
+        setAppVisible(false);document.querySelectorAll(".screen").forEach(function(el){el.classList.add("hidden");});
+        document.getElementById("onboarding").classList.remove("hidden");
+        document.getElementById("levelStep").classList.add("hidden");document.getElementById("audienceStep").classList.remove("hidden");
+      });
+      document.getElementById("resetProgress").addEventListener("click",function(){document.getElementById("confirmDialog").showModal();});
+      document.getElementById("cancelReset").addEventListener("click",function(){document.getElementById("confirmDialog").close();});
+      document.getElementById("keepProgress").addEventListener("click",function(){document.getElementById("confirmDialog").close();});
+      document.getElementById("confirmReset").addEventListener("click",function(){
+        localStorage.removeItem("lesewelt-state-v1");state=cloneDefault();document.getElementById("confirmDialog").close();location.reload();
+      });
+      window.addEventListener("beforeunload",stopSpeaking);
+    }
+    function init(){
+      setupOnboarding();bindEvents();
+      document.querySelectorAll("[data-rate]").forEach(function(btn){btn.classList.toggle("active",Number(btn.getAttribute("data-rate"))===Number(state.rate));});
+      if(state.profile){updateVisit();setAppVisible(true);updateHeader();showScreen("library");}
+      else{setAppVisible(false);}
+    }
+    init();
+  })();
+  </script>
+</body>
+</html>
