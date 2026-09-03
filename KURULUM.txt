@@ -1,0 +1,14 @@
+LESEWELT - GITHUB PAGES KURULUMU
+
+Bu klasördeki index.html dosyasını ve assets klasörünü birlikte
+GitHub deposunun ana dizinine yükleyin. Klasör yapısını değiştirmeyin.
+
+1. GitHub'da yeni bir depo oluşturun.
+2. Bu paketteki index.html, KURULUM.txt ve assets klasörünü yükleyin.
+3. Settings > Pages bölümünü açın.
+4. Source olarak "Deploy from a branch" seçin.
+5. Branch: main, Folder: / (root) seçip Save düğmesine basın.
+
+Site harici kütüphane veya API kullanmaz. Kullanıcının ilerlemesi,
+puanları ve kelimeleri tarayıcının yerel depolama alanında saklanır.
+Almanca seslendirme, cihazın ve tarayıcının de-DE sesini kullanır.
